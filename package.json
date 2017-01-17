@@ -4,7 +4,7 @@
   "description": "Application for creating and managing CVs based on ReactJS",
   "main": "index.js",
   "scripts": {
-    "start": "webpack --progress && webpack-dev-server --progress --colors",
+    "start": "node index.js",
     "build": "webpack --progress"
   },
   "author": "nowordforfree@gmail.com",
