@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 const config = require('./config');
 const webpackConfig = require('./webpack.config');
+const runApi = require('./api');
 
 const DEFAULT_PORT = process.env.PORT || config.app.port || 8080;
 let compiler;
@@ -75,8 +76,10 @@ function runDevServer(host, port, protocol) {
 }
 
 function run(port) {
-  var protocol = process.env.HTTPS === 'true' ? "https" : "http";
+  var protocol = (process.env.HTTPS === 'true' ||
+                  config.app.https === true) ? 'https' : 'http';
   var host = process.env.HOST || config.app.host || 'localhost';
+  runApi();
   setupCompiler(host, port, protocol);
   runDevServer(host, port, protocol);
 }

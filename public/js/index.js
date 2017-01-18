@@ -2,8 +2,9 @@ import 'bootstrap/less/bootstrap.less';
 import '../css/app.less';
 
 import 'bootstrap/dist/js/bootstrap';
+import React from 'react';
 import ReactDom from 'react-dom';
-import routes from './routes';
+import AppRouter from './AppRouter';
 import { browserHistory } from 'react-router';
 
-ReactDom.render(routes(browserHistory), document.getElementById('app'));
+ReactDom.render(<AppRouter history={browserHistory}/>, document.getElementById('app'));

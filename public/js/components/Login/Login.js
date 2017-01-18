@@ -2,7 +2,7 @@ import React from 'react';
 
 export default (props) => {
   return (
-    <form className="form-horizontal">
+    <form className="form-horizontal col-md-offset-2 col-md-8">
       <div className="form-group">
         <label htmlFor="email" className="col-xs-3 control-label">
           Email

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+import NavLink from './NavLink';
 
 export default class Navbar extends React.Component {
   collapseNavbar() {
@@ -27,33 +27,20 @@ export default class Navbar extends React.Component {
           </div>
           <div className="collapse navbar-collapse" id="bs-navbar">
             <ul className="nav navbar-nav">
-              <li>
-                <Link to="/" onClick={this.collapseNavbar}>
-                  Home <span className="sr-only">(current)</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="#" onClick={this.collapseNavbar}>
-                  Link
-                </Link>
-              </li>
+              <NavLink to="/" index={true} onlyActiveOnIndex={true} onClick={this.collapseNavbar}>
+                Home <span className="sr-only">(current)</span>
+              </NavLink>
             </ul>
             <ul className="nav navbar-nav navbar-right">
-              <li>
-                <Link to="/login" onClick={this.collapseNavbar}>
-                  Login
-                </Link>
-              </li>
-              <li>
-                <Link to="/profile" onClick={this.collapseNavbar}>
-                  {this.props.username}
-                </Link>
-              </li>
-              <li>
-                <Link to="#" onClick={this.collapseNavbar}>
-                  Logout
-                </Link>
-              </li>
+              <NavLink to="login" onClick={this.collapseNavbar}>
+                Login
+              </NavLink>
+              <NavLink to="profile" onClick={this.collapseNavbar}>
+                {this.props.username}
+              </NavLink>
+              <NavLink to="logout" onClick={this.collapseNavbar}>
+                Logout
+              </NavLink>
             </ul>
           </div>
         </div>
