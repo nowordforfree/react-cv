@@ -1,19 +1,55 @@
-const express = require('express');
-const routes = require('./routes');
-const bodyParser = require('body-parser');
-const config = require('../config');
+const express     = require('express');
+const routes      = require('./routes');
+const helmet      = require('helmet');
+const bodyParser  = require('body-parser');
+const cookieParser= require('cookie-parser');
+const session     = require('express-session');
+const multer      = require('multer');
+const config      = require('../config');
+
+const upload = multer();
 
 const HOST = config.api.hostname || 'localhost';
 const PORT = config.api.port || '8070'; 
 
 module.exports = () => {
   const app = express();
+  // Helmet can help protect app from some well-known web
+  // vulnerabilities by setting HTTP headers appropriately
+  app.use(helmet());
+  // parse application/x-www-form-urlencoded
+  app.use(bodyParser.urlencoded({ extended: false }));
+  // parse application/json
+  app.use(bodyParser.json());
+  // Use cookie-parser
+  app.use(cookieParser());
+  // use session cookies
+  app.use(session({
+    name: 'cvs-session',
+    resave: false,
+    saveUninitialized: false,
+    secret: 'secret key 001',
+    unset: 'destroy',
+    cookie: {
+      httpOnly: false,
+      maxAge: 30 * 60 * 1000,
+      path: '/'
+    }
+  }));
+  // enable CORS
+  app.use(function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept'
+    );
+    next();
+  });
   // Also "multer" package is used in POST /user route
   // for handling multipart/form-data requests
-  // parse application/x-www-form-urlencoded
-  app.use(bodyParser.urlencoded({ extended: true }))
-  // parse application/json
-  app.use(bodyParser.json())
+  app.post('/api/*', upload.array());
+
   app.use('/api', routes);
 
   app.get('/', (req, res) => {
