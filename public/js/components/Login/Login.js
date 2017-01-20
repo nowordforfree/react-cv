@@ -1,7 +1,5 @@
 import React from 'react';
-import cookie from 'react-cookie';
-
-const API_URL = 'http://localhost:8090/api';
+import { Tabs, Tab } from 'material-ui/Tabs';
 
 export default class Login extends React.Component {
   constructor(props) {
@@ -15,6 +13,14 @@ export default class Login extends React.Component {
       password: '',
       confirm_password: ''
     };
+    this.state = {
+      activeTab: 'login'
+    };
+  }
+  handleSelect(key) {
+    this.setState({
+      activeTab: key
+    });
   }
   validateAndLogin(e) {
     e.preventDefault();
@@ -24,7 +30,6 @@ export default class Login extends React.Component {
     })
     .then(res => { return res.json(); })
     .then(res => {
-      let user = cookie.load('cvs-session');
       debugger;
     })
     .catch((err) => {
@@ -52,90 +57,87 @@ export default class Login extends React.Component {
   }
   render() {
     return (
-      <div className="col-md-offset-2 col-md-8">
-        <ul className="nav nav-tabs nav-justified" role="tablist">
-          <li role="presentation" className="active">
-            <a href="#login" aria-controls="login" role="tab" data-toggle="tab">
-              Have account
-            </a>
-          </li>
-          <li role="presentation">
-            <a href="#register" aria-controls="register" role="tab" data-toggle="tab">
-              Register
-            </a>
-          </li>
-        </ul>
-        <br/>
-        <div className="tab-content">
-          <div role="tabpanel" className="tab-pane fade in active" id="login">
-            <form className="form-horizontal" onSubmit={this.validateAndLogin.bind(this)}>
-              <div className="form-group">
-                <label htmlFor="email" className="col-xs-3 control-label">
-                  Email
-                </label>
-                <div className="col-xs-9">
-                  <input type="email" id="email" name="email" className="form-control"
-                         ref={(input) => { this.login.email = input; }} required/>
-                </div>
-              </div>
-              <div className="form-group">
-                <label htmlFor="password" className="col-xs-3 control-label">
-                  Password
-                </label>
-                <div className="col-xs-9">
-                  <input type="password" id="password" name="password"
-                         className="form-control" minLength="6"
-                         ref={(input) => { this.login.password = input; }} required/>
-                </div>
-              </div>
-              <div className="form-group">
-                <div className="col-xs-offset-3 col-xs-9">
-                  <button type="submit" className="btn btn-primary">Login</button>
-                </div>
-              </div>
-            </form>
+      <Tabs value={this.state.activeTab} onChange={this.handleSelect.bind(this)}>
+        <Tab title="Sign In as registered user" label="Login" value="login">
+          <div className="row">
+            <div className="col-md-offset-2 col-md-8">
+              <form className="form-horizontal" onSubmit={this.validateAndLogin.bind(this)}>
+                <fieldset>
+                  <div className="form-group">
+                    <label htmlFor="email" className="col-xs-3 control-label">
+                      Email
+                    </label>
+                    <div className="col-xs-9">
+                      <input type="email" id="email" name="email" className="form-control"
+                            ref={(input) => { this.login.email = input; }} required/>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="password" className="col-xs-3 control-label">
+                      Password
+                    </label>
+                    <div className="col-xs-9">
+                      <input type="password" id="password" name="password"
+                            className="form-control" minLength="6"
+                            ref={(input) => { this.login.password = input; }} required/>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <div className="col-xs-offset-3 col-xs-9">
+                      <button type="submit" className="btn btn-primary">Login</button>
+                    </div>
+                  </div>
+                </fieldset>
+              </form>
+            </div>
           </div>
-          <div role="tabpanel" className="tab-pane fade" id="register">
-            <form className="form-horizontal" onSubmit={this.validateAndRegister.bind(this)}>
-              <div className="form-group">
-                <label htmlFor="email" className="col-xs-3 control-label">
-                  Email
-                </label>
-                <div className="col-xs-9">
-                  <input type="email" id="email" name="email" className="form-control"
-                         ref={(input) => { this.register.email = input; }} required/>
-                </div>
-              </div>
-              <div className="form-group">
-                <label htmlFor="password" className="col-xs-3 control-label">
-                  Password
-                </label>
-                <div className="col-xs-9">
-                  <input type="password" id="password" name="password"
-                         className="form-control" minLength="6"
-                         ref={(input) => { this.register.password = input; }} required/>
-                </div>
-              </div>
-              <div className="form-group">
-                <label htmlFor="confirm_password" className="col-xs-3 control-label">
-                  Confirm password
-                </label>
-                <div className="col-xs-9">
-                  <input type="password" id="confirm_password" name="confirm_password"
-                         className="form-control" minLength="6"
-                         ref={(input) => { this.register.confirm_password = input; }}
-                         required/>
-                </div>
-              </div>
-              <div className="form-group">
-                <div className="col-xs-offset-3 col-xs-9">
-                  <button type="submit" className="btn btn-primary">Register</button>
-                </div>
-              </div>
-            </form>
+        </Tab>
+        <Tab title="Register as new user" label="Register" value="register">
+          <div className="row">
+            <div className="col-md-offset-2 col-md-8">
+              <form className="form-horizontal" onSubmit={this.validateAndRegister.bind(this)}>
+                <fieldset>
+                  <div className="form-group">
+                    <label htmlFor="email" className="col-xs-3 control-label">
+                      Email
+                    </label>
+                    <div className="col-xs-9">
+                      <input type="email" id="email" name="email" className="form-control"
+                              ref={(input) => { this.register.email = input; }} required/>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="password" className="col-xs-3 control-label">
+                      Password
+                    </label>
+                    <div className="col-xs-9">
+                      <input type="password" id="password" name="password"
+                              className="form-control" minLength="6"
+                              ref={(input) => { this.register.password = input; }} required/>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="confirm_password" className="col-xs-3 control-label">
+                      Confirm password
+                    </label>
+                    <div className="col-xs-9">
+                      <input type="password" id="confirm_password" name="confirm_password"
+                              className="form-control" minLength="6"
+                              ref={(input) => { this.register.confirm_password = input; }}
+                              required/>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <div className="col-xs-offset-3 col-xs-9">
+                      <button type="submit" className="btn btn-primary">Register</button>
+                    </div>
+                  </div>
+                </fieldset>
+              </form>
+            </div>
           </div>
-        </div>
-      </div>
+        </Tab>
+      </Tabs>
     );
   }
 }

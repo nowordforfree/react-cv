@@ -1,10 +1,23 @@
-import 'bootstrap/less/bootstrap.less';
+import React from 'react';
+import { render } from 'react-dom';
+import { browserHistory } from 'react-router';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+import 'bootstrap-less/bootstrap/index.less';
+import 'bootstrap-material-design/less/bootstrap-material-design.less';
+import 'bootstrap-material-design/less/ripples.less';
 import '../css/app.less';
 
-import 'bootstrap/dist/js/bootstrap';
-import React from 'react';
-import ReactDom from 'react-dom';
 import AppRouter from './AppRouter';
-import { browserHistory } from 'react-router';
 
-ReactDom.render(<AppRouter history={browserHistory}/>, document.getElementById('app'));
+const App = (props) => {
+  return (
+    <MuiThemeProvider>
+      <AppRouter history={browserHistory}/>
+    </MuiThemeProvider>
+  );
+};
+
+injectTapEventPlugin()
+render(<App />, document.getElementById('app'));

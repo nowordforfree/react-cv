@@ -1,6 +1,5 @@
 import React from 'react';
 import { IndexRoute, Route, Router } from 'react-router';
-import cookie from 'react-cookie';
 
 import Error404 from './components/Error404';
 import Root from './components/Root';
@@ -10,8 +9,8 @@ import Login from './components/Login';
 export default class AppRouter extends React.Component {
     constructor(props) {
         super(props);
-        let token = cookie.load('token');
-        let user = cookie.load('user');
+        let token = localStorage.getItem('token');
+        let user = localStorage.getItem('user');
         if (user) {
             user = JSON.parse(user);
         }

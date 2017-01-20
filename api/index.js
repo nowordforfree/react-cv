@@ -3,7 +3,6 @@ const routes      = require('./routes');
 const helmet      = require('helmet');
 const bodyParser  = require('body-parser');
 const cookieParser= require('cookie-parser');
-const session     = require('express-session');
 const multer      = require('multer');
 const config      = require('../config');
 
@@ -14,6 +13,8 @@ const PORT = config.api.port || '8070';
 
 module.exports = () => {
   const app = express();
+  // hack ?
+  app.set('trust proxy', 1);
   // Helmet can help protect app from some well-known web
   // vulnerabilities by setting HTTP headers appropriately
   app.use(helmet());
@@ -23,19 +24,6 @@ module.exports = () => {
   app.use(bodyParser.json());
   // Use cookie-parser
   app.use(cookieParser());
-  // use session cookies
-  app.use(session({
-    name: 'cvs-session',
-    resave: false,
-    saveUninitialized: false,
-    secret: 'secret key 001',
-    unset: 'destroy',
-    cookie: {
-      httpOnly: false,
-      maxAge: 30 * 60 * 1000,
-      path: '/'
-    }
-  }));
   // enable CORS
   app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');

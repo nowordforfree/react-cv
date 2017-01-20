@@ -1,4 +1,5 @@
 const express = require('express');
+const jwt     = require('jsonwebtoken');
 const db      = require('../models');
 
 const router  = express.Router();
@@ -31,8 +32,24 @@ router.post('/login', (req, res, next) => {
         return next();
       }
       if (user.comparePassword(req.body.password)) {
-        req.session.user = user;
-        res.json({ data: user });
+        jwt.sign({
+          user: user.get()
+        }, 'CvsPrivateKey', {
+          expiresIn: '30m'
+        }, (err, token) => {
+          if (err) {
+            res.status(500).json({
+              error: err
+            });
+          } else {
+            res.json({
+              data: {
+                token: token,
+                user: user
+              }
+            });
+          }
+        });
       } else {
         res.status(400).json({
           error: 'Password does not match'

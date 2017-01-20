@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const WebpackNotifierPlugin = require('webpack-notifier');
+const config = require('./config');
 
 module.exports = {
 	entry: {
@@ -33,10 +34,9 @@ module.exports = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new WebpackNotifierPlugin(),
-		new webpack.ProvidePlugin({
-			$: "jquery",
-			jQuery: "jquery",
-			"window.jQuery": "jquery"
+		new webpack.optimize.DedupePlugin(),
+		new webpack.DefinePlugin({
+			API_URL: JSON.stringify(`http://${config.api.host}:${config.api.port}/api`)
 		})
   ]
 }
