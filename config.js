@@ -5,7 +5,7 @@ module.exports = {
     password: 'postgres',
     options: {
       dialect: 'postgres',
-      host: 'localhost',
+      host: '172.18.0.22',
       logging: console.log,
       port: 5432
     }
