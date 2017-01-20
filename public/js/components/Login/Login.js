@@ -17,6 +17,9 @@ export default class Login extends React.Component {
       activeTab: 'login'
     };
   }
+  componentDidMount() {
+    $.material.init();
+  }
   handleSelect(key) {
     this.setState({
       activeTab: key
@@ -30,7 +33,10 @@ export default class Login extends React.Component {
     })
     .then(res => { return res.json(); })
     .then(res => {
-      debugger;
+      if (res.data) {
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('user', JSON.stringify(res.data.user));
+      }
     })
     .catch((err) => {
       debugger;

@@ -35,6 +35,10 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new WebpackNotifierPlugin(),
 		new webpack.optimize.DedupePlugin(),
+		new webpack.ProvidePlugin({
+			$: 'jquery',
+			jQuery: 'jquery'
+		}),
 		new webpack.DefinePlugin({
 			API_URL: JSON.stringify(`http://${config.api.host}:${config.api.port}/api`)
 		})

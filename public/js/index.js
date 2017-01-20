@@ -3,6 +3,9 @@ import { render } from 'react-dom';
 import { browserHistory } from 'react-router';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+// bootstrap-material js dependencies
+import 'bootstrap-material-design/dist/js/material';
+import 'bootstrap-material-design/dist/js/ripples';
 
 import 'bootstrap-less/bootstrap/index.less';
 import 'bootstrap-material-design/less/bootstrap-material-design.less';
