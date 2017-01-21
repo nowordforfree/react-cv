@@ -14,7 +14,11 @@ export default class Login extends React.Component {
       confirm_password: ''
     };
     this.state = {
-      activeTab: 'login'
+      activeTab: 'login',
+      error: {
+        login: null,
+        register: null
+      }
     };
   }
   componentDidMount() {
@@ -27,6 +31,11 @@ export default class Login extends React.Component {
   }
   validateAndLogin(e) {
     e.preventDefault();
+    let noLoginError = Object.assign({},
+      this.state,
+      { error: { login: null } }
+    );
+    this.setState(noLoginError);
     fetch(`${API_URL}/auth/login`, {
       method: 'post',
       body: new FormData(e.target)
@@ -36,6 +45,13 @@ export default class Login extends React.Component {
       if (res.data) {
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('user', JSON.stringify(res.data.user));
+      } else if (res.error) {
+        let newState = Object.assign(
+          {},
+          this.state,
+          { error: { login: res.error } }
+        );
+        this.setState(newState);
       }
     })
     .catch((err) => {
@@ -63,10 +79,10 @@ export default class Login extends React.Component {
   }
   render() {
     return (
-      <Tabs value={this.state.activeTab} onChange={this.handleSelect.bind(this)}>
-        <Tab title="Sign In as registered user" label="Login" value="login">
-          <div className="row">
-            <div className="col-md-offset-2 col-md-8">
+      <div className="row">
+        <div className="col-md-offset-2 col-md-8">
+          <Tabs value={this.state.activeTab} onChange={this.handleSelect.bind(this)}>
+            <Tab title="Sign In as registered user" label="Login" value="login">
               <form className="form-horizontal" onSubmit={this.validateAndLogin.bind(this)}>
                 <fieldset>
                   <div className="form-group">
@@ -88,6 +104,13 @@ export default class Login extends React.Component {
                             ref={(input) => { this.login.password = input; }} required/>
                     </div>
                   </div>
+                  <div className={"form-group alert alert-danger" +
+                                  (this.state.error.login !== null ? "" : " hidden")
+                                 }>
+                    <div className="col-xs-9 col-xs-offset-3">
+                      {this.state.error.login}
+                    </div>
+                  </div>
                   <div className="form-group">
                     <div className="col-xs-offset-3 col-xs-9">
                       <button type="submit" className="btn btn-primary">Login</button>
@@ -95,12 +118,8 @@ export default class Login extends React.Component {
                   </div>
                 </fieldset>
               </form>
-            </div>
-          </div>
-        </Tab>
-        <Tab title="Register as new user" label="Register" value="register">
-          <div className="row">
-            <div className="col-md-offset-2 col-md-8">
+            </Tab>
+            <Tab title="Register as new user" label="Register" value="register">
               <form className="form-horizontal" onSubmit={this.validateAndRegister.bind(this)}>
                 <fieldset>
                   <div className="form-group">
@@ -140,10 +159,10 @@ export default class Login extends React.Component {
                   </div>
                 </fieldset>
               </form>
-            </div>
-          </div>
-        </Tab>
-      </Tabs>
+            </Tab>
+          </Tabs>
+        </div>
+      </div>
     );
   }
 }
