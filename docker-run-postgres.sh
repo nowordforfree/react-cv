@@ -7,7 +7,8 @@ docker run -it --rm \
            -e POSTGRES_PASSWORD=postgres \
            -e POSTGRES_USER=postgres \
            -e POSTGRES_DB=cvs \
+           -e PGDATA=/var/lib/postgresql/data/cvs \
            -p 32801:5432 \
-           -v $(pwd)/volumes:/var/lib/docker/data \
+           -v $(pwd)/volumes:/var/lib/postgresql/data/cvs \
            -d postgres
 echo "Postgres docker container started - 172.18.0.22:5432"
