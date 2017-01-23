@@ -6,6 +6,7 @@ export default (props) => {
   const style = {
     minHeight: 200,
     margin: 20,
+    paddingTop: 20,
     textAlign: 'center'
   };
 

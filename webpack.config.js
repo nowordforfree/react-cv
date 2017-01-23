@@ -34,13 +34,18 @@ module.exports = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new WebpackNotifierPlugin(),
-		new webpack.optimize.DedupePlugin(),
 		new webpack.ProvidePlugin({
 			$: 'jquery',
-			jQuery: 'jquery'
+			jQuery: 'jquery',
+			fetch: 'isomorphic-fetch'
 		}),
 		new webpack.DefinePlugin({
-			API_URL: JSON.stringify(`http://${config.api.host}:${config.api.port}/api`)
-		})
+			API_URL: JSON.stringify(`http://${config.api.host}:${config.api.port}/api`),
+			'process.env': {
+				'NODE_ENV': JSON.stringify('development')
+			}
+		}),
+		new webpack.optimize.DedupePlugin(),
+		new webpack.optimize.OccurrenceOrderPlugin()
   ]
 }
