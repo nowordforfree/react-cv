@@ -6,7 +6,7 @@ router.get('/', (req, res) => {
   db
     .Cv
     .findAll({
-      indclude: [
+      include: [
         { model: db.Project, as: 'projects' },
         { model: db.Experience, as: 'experiences' }
       ]
@@ -28,7 +28,7 @@ router.get('/:id', (req, res) => {
   db
     .Cv
     .findById(req.params.id, {
-      indclude: [
+      include: [
         { model: db.Project, as: 'projects' },
         { model: db.Experience, as: 'experiences' }
       ]
@@ -46,7 +46,7 @@ router.post('/', (req, res, next) => {
     .sequelize
     .transaction((t) => {
       return db.Cv.create(req.body, {
-        indclude: [
+        include: [
           { model: db.Project, as: 'projects' },
           { model: db.Experience, as: 'experiences' }
         ],
@@ -65,7 +65,7 @@ router.put('/:id', (req, res) => {
   db
     .Cv
     .findById(req.params.id, {
-      indclude: [
+      include: [
         { model: db.Project, as: 'projects' },
         { model: db.Experience, as: 'experiences' }
       ]
