@@ -32,7 +32,7 @@ class Root extends React.Component {
 };
 
 const mapStateToProps = state => ({
-  showSpinner: state.auth.isFetching,
+  showSpinner: (state.auth.isFetching || state.cvs.isFetching ),
   signedIn: state.auth.signedIn
 });
 

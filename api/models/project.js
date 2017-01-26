@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  let Project = sequelize.define('Project', {
+  return sequelize.define('Project', {
     title: {
       type: DataTypes.STRING,
       allowNull: false
@@ -13,9 +13,8 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     classMethods: {
       associate: function(models) {
-        Project.belongsTo(models.Cv);
+        this.belongsTo(models.Cv);
       }
     }
   });
-  return Project;
 }

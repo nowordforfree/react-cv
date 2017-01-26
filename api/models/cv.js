@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  let Cv = sequelize.define('Cv', {
+  return sequelize.define('Cv', {
     firstname: {
       type: DataTypes.STRING,
       allowNull: false
@@ -16,10 +16,9 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     classMethods: {
       associate: function(models) {
-        Cv.hasMany(models.Project, { as: 'projects' });
-        Cv.hasMany(models.Experience, { as: 'experiences' });
+        this.hasMany(models.Project, { as: 'projects' });
+        this.hasMany(models.Experience, { as: 'experiences' });
       }
     }
   });
-  return Cv;
 }
