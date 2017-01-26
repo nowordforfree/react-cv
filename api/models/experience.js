@@ -12,11 +12,6 @@ function validateYear(value) {
 
 module.exports = (sequelize, DataTypes) => {
   let Experience = sequelize.define('Experience', {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
-    },
     since: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -54,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     classMethods: {
       associate: function(models) {
-        Experience.belongsTo(models.Cv, { as: 'experiences' });
+        Experience.belongsTo(models.Cv);
       }
     }
   });

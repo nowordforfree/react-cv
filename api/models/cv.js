@@ -1,10 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
   let Cv = sequelize.define('Cv', {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
-    },
     firstname: {
       type: DataTypes.STRING,
       allowNull: false
@@ -21,14 +16,8 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     classMethods: {
       associate: function(models) {
-        Cv.hasMany(models.Project, {
-          as: 'projects',
-          foreignKey: 'id'
-        });
-        Cv.hasMany(models.Experience, {
-          as: 'experiences',
-          foreignKey: 'id'
-        });
+        Cv.hasMany(models.Project, { as: 'projects' });
+        Cv.hasMany(models.Experience, { as: 'experiences' });
       }
     }
   });

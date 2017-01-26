@@ -37,6 +37,7 @@ router.get('/:id', (req, res) => {
       res.json({ data: cv });
     })
     .catch((err) => {
+      console.error(err);
       res.status(500).json({ error: err });
     });
 });
