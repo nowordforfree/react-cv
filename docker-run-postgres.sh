@@ -1,4 +1,5 @@
 #!/bin/bash
+docker stop react-cv-postgres
 docker network rm react-cv
 docker network create --subnet=172.18.0.0/16 react-cv
 docker run -it --rm \

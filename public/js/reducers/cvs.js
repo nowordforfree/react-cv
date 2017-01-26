@@ -1,22 +1,41 @@
-const cv = (state, action) => {
-  switch (action.type) {
-    case 'CV_ADD':
-      return {
-        id: action.id,
-        data: action
-      };
-    default:
-      return state;
-  }
+import {
+  CV_FETCH,
+  CV_RECEIVED,
+  CV_FAILURE,
+  CV_ADD,
+  CV_SHOW
+} from '../actions';
+
+const initialState = {
+  items: [],
+  isFetching: false,
+  error: null
 };
 
-const cvs = (state = [], action) => {
+const cvs = (state = initialState, action) => {
   switch (action.type) {
-    case 'CV_ADD':
-      return [
+    case CV_ADD:
+      return {
         ...state,
-        cv(undefined, action)
-      ];
+        cvs: [...state.items, action.data ]
+      };
+    case CV_FETCH:
+      return {
+        ...state,
+        isFetching: true
+      };
+    case CV_RECEIVED:
+      return {
+        ...state,
+        isFetching: false,
+        items: [...state.items, action.data]
+      };
+    case CV_FAILURE:
+      return {
+        ...state,
+        isFetching: false,
+        error: action.error
+      }
     default:
       return state;
   }

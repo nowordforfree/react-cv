@@ -11,13 +11,19 @@ const getVisibleCvList = (cvs, filter) => {
   }
 };
 
-const mapStateToProps = (state, ownProps) => ({
-  cvs: getVisibleCvList(state.cvs, ownProps.filter)
-});
+const mapStateToProps = (state) => {
+  return {
+    cvs: getVisibleCvList(state.cvs.items, state.filter)
+  };
+};
 
-const mapDispatchToProps = ({
-  onCvClick: showCv
-});
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onCvClick: (id) => {
+      dispatch(showCv(id));
+    }
+  }
+};
 
 export default connect(
   mapStateToProps,
