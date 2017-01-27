@@ -90,10 +90,13 @@ export const logout = () =>  dispatch => {
     });
 };
 
-export const fetchCvs = () => dispatch => {
+export const fetchCvs = (id) => dispatch => {
   dispatch({ type: CV_FETCH });
-
-  return fetch(`${API_URL}/cv`)
+  let url = `${API_URL}/cv`;
+  if (id) {
+    url += '/' + id;
+  }
+  return fetch(url)
     .then(res => res.json())
     .then(res => {
       dispatch({
@@ -122,7 +125,6 @@ export const setVisibilityFilter = (filter) => ({
   filter
 });
 
-export const showCv = (id) => ({
-  type: CV_SHOW,
-  id
-});
+export const showCv = (id) => {
+  fetchCvs(id);
+}

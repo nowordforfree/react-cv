@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { fetchCvs, showCv } from '../actions';
-import CvList from '../components/CvList';
+import CvTable from '../components/CvTable';
 
 const getVisibleCvList = (cvs, filter) => {
   switch (filter) {
@@ -17,18 +17,14 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getCvItems: () => {
-      dispatch(fetchCvs());
-    },
+const mapDispatchToProps = {
+    getCvItems: fetchCvs,
     onCvClick: (id) => {
-      dispatch(showCv(id));
+      showCv(id);
     }
-  }
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CvList);
+)(CvTable);

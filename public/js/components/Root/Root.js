@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar from '../Navbar';
+import Topbar from '../Topbar';
 import Spinner from '../Spinner';
 import { connect } from 'react-redux';
 import Paper from 'material-ui/Paper';
@@ -16,13 +16,14 @@ class Root extends React.Component {
     const style = {
       minHeight: 200,
       margin: 20,
-      paddingTop: 20,
+      paddingTop: 15,
+      paddingBottom: 40,
       textAlign: 'center'
     };
     return (
       <div>
         { this.props.showSpinner ? <Spinner/> : null }
-        <Navbar username='me'/>
+        <Topbar />
         <Paper style={style} zDepth={1}>
           { this.props.children }
         </Paper>

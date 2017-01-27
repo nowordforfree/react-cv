@@ -17,7 +17,7 @@ const cvs = (state = initialState, action) => {
     case CV_ADD:
       return {
         ...state,
-        items: [...state.items, action.data ]
+        items: [...state.items, ...action.data ]
       };
     case CV_FETCH:
       return {
@@ -28,7 +28,7 @@ const cvs = (state = initialState, action) => {
       return {
         ...state,
         isFetching: false,
-        items: [...state.items, action.data]
+        items: [...action.data]
       };
     case CV_FAILURE:
       return {

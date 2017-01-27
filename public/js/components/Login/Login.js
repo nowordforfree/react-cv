@@ -24,9 +24,6 @@ class Login extends React.Component {
       }
     };
   }
-  componentDidMount() {
-    $.material.init();
-  }
   handleSelect(key) {
     this.setState({
       activeTab: key

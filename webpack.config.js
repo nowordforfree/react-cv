@@ -34,11 +34,6 @@ module.exports = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new WebpackNotifierPlugin(),
-		new webpack.ProvidePlugin({
-			$: 'jquery',
-			jQuery: 'jquery',
-			fetch: 'isomorphic-fetch'
-		}),
 		new webpack.DefinePlugin({
 			API_URL: JSON.stringify(`http://${config.api.host}:${config.api.port}/api`),
 			'process.env': {
