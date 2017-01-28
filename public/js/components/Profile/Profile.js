@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 
 const validate = values => {
   const errors = {};
@@ -39,10 +40,20 @@ const ProfileForm = props => {
         <Field name="lastName" component={renderTextField} label="Last Name"/>
       </div>
       <div className="form-group">
-        <Field name="email" component={renderTextField} label="Email"/>
+        <Field
+          component={renderTextField}
+          label="Email"
+          name="email"
+          type="email"
+        />
       </div>
       <div className="form-group">
-        <button className="btn btn-primary" type="submit" disabled={pristine || submitting}>Submit</button>
+        <RaisedButton
+          disabled={pristine || submitting}
+          label="Submit"
+          primary={true}
+          type="submit"
+        />
       </div>
     </form>
   )

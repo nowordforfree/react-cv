@@ -1,5 +1,7 @@
 import React from 'react';
 import { Tabs, Tab } from 'material-ui/Tabs';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 import { connect } from 'react-redux';
 import { login, register } from '../../actions';
 
@@ -84,88 +86,96 @@ class Login extends React.Component {
         <div className="col-md-offset-2 col-md-8">
           <Tabs value={this.state.activeTab} onChange={this.handleSelect.bind(this)}>
             <Tab title="Sign In as registered user" label="Login" value="login">
-              <form className="form-horizontal" onSubmit={this.validateAndLogin.bind(this)}>
+              <form className="form col-md-6 col-md-offset-3" onSubmit={this.validateAndLogin.bind(this)}>
                 <fieldset>
                   <div className="form-group">
-                    <label htmlFor="login_email" className="col-xs-3 control-label">
-                      Email
-                    </label>
-                    <div className="col-xs-9">
-                      <input type="email" id="login_email" name="email" className="form-control"
-                             onChange={ this.handleEmail.bind(this) } required />
-                    </div>
+                    <TextField
+                      type="email"
+                      name="email"
+                      floatingLabelText="Email"
+                      fullWidth={true}
+                      onChange={ this.handleEmail.bind(this) }
+                      required
+                    />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="login_password" className="col-xs-3 control-label">
-                      Password
-                    </label>
-                    <div className="col-xs-9">
-                      <input type="password" id="login_password" name="password"
-                            className="form-control" minLength="6"
-                            onChange={ this.handlePassword.bind(this) } required />
-                    </div>
+                    <TextField
+                      type="password"
+                      name="password"
+                      floatingLabelText="Password"
+                      fullWidth={true}
+                      minLength={6}
+                      onChange={ this.handlePassword.bind(this) }
+                      required
+                    />
                   </div>
-                  <div className={"form-group alert alert-danger" +
+                  <div className={"form-group" +
                                   ((this.state.error.login ||
                                     this.props.error) ? "" : " hidden")
                                  }>
-                    <div className="col-xs-9 col-xs-offset-3">
+                    <div className="alert alert-danger text-center">
                       <b>{this.state.error.login || this.props.error}</b>
                     </div>
                   </div>
                   <div className="form-group">
-                    <div className="col-xs-offset-3 col-xs-9">
-                      <button type="submit" className="btn btn-primary">Login</button>
-                    </div>
+                    <RaisedButton
+                      label="Login"
+                      primary={true}
+                      type="submit"
+                    />
                   </div>
                 </fieldset>
               </form>
             </Tab>
             <Tab title="Register as new user" label="Register" value="register">
-              <form className="form-horizontal" onSubmit={this.validateAndRegister.bind(this)}>
+              <form className="form col-md-6 col-md-offset-3" onSubmit={this.validateAndRegister.bind(this)}>
                 <fieldset>
                   <div className="form-group">
-                    <label htmlFor="register_email" className="col-xs-3 control-label">
-                      Email
-                    </label>
-                    <div className="col-xs-9">
-                      <input type="email" id="register_email" name="email" className="form-control"
-                             onChange={ this.handleEmail.bind(this) } required />
-                    </div>
+                    <TextField
+                      type="email"
+                      name="email"
+                      floatingLabelText="Email"
+                      fullWidth={true}
+                      onChange={ this.handleEmail.bind(this) }
+                      required
+                    />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="register_password" className="col-xs-3 control-label">
-                      Password
-                    </label>
-                    <div className="col-xs-9">
-                      <input type="password" id="register_password" name="password"
-                              className="form-control" minLength="6"
-                              onChange={ this.handlePassword.bind(this) } required />
-                    </div>
+                    <TextField
+                      type="password"
+                      name="password"
+                      floatingLabelText="Password"
+                      fullWidth={true}
+                      minLength={6}
+                      onChange={ this.handlePassword.bind(this) }
+                      required
+                    />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="confirm_password" className="col-xs-3 control-label">
-                      Confirm password
-                    </label>
-                    <div className="col-xs-9">
-                      <input type="password" id="confirm_password" name="confirm_password"
-                              className="form-control" minLength="6"
-                              onChange={ this.handleConfirmPassword.bind(this) }
-                              required />
-                    </div>
+                    <TextField
+                      type="password"
+                      name="confirm_password"
+                      floatingLabelText="Confirm Password"
+                      fullWidth={true}
+                      minLength={6}
+                      onChange={ this.handleConfirmPassword.bind(this) }
+                      required
+                    />
                   </div>
-                  <div className={"form-group alert alert-danger" +
+                  <div className={"form-group" +
                                   ((this.state.error.register ||
                                     this.props.error) ? "" : " hidden")
                                  }>
-                    <div className="col-xs-9 col-xs-offset-3">
+                    <div className="alert alert-danger text-center">
                       <b>{this.state.error.register || this.props.error}</b>
                     </div>
                   </div>
                   <div className="form-group">
-                    <div className="col-xs-offset-3 col-xs-9">
-                      <button type="submit" className="btn btn-primary">Register</button>
-                    </div>
+                    <RaisedButton
+                      label="Register"
+                      primary={true}
+                      type="submit"
+                    />
                   </div>
                 </fieldset>
               </form>
