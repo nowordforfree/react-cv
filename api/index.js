@@ -8,7 +8,7 @@ const config      = require('../config');
 
 const upload = multer();
 
-const HOST = config.api.hostname || 'localhost';
+const HOST = config.api.host || 'localhost';
 const PORT = config.api.port || '8070'; 
 
 module.exports = () => {

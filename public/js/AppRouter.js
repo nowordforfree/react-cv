@@ -18,9 +18,9 @@ function isLoggedIn(nextState, replace, callback) {
 
 const routes =
   <Route path='/' component={Root}>
-    <IndexRoute component={Home} onEnter={isLoggedIn}/>
+    <IndexRoute component={Home} onEnter={isLoggedIn} />
     <Route path='login' component={Login}/>
-    <Route path='profile' component={Profile} />
+    <Route path='profile' component={Profile} onEnter={isLoggedIn} />
     <Route path='*' component={Error404}/>
   </Route>;
 

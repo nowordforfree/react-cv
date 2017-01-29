@@ -22,51 +22,89 @@ const renderTextField = ({ input, label, meta: { touched, error }, ...custom }) 
   <TextField hintText={label}
     floatingLabelText={label}
     errorText={touched && error}
+    {...input}
     {...custom}
   />
 )
 
-const ProfileForm = props => {
+let ProfileForm = props => {
   const { handleSubmit, pristine, reset, submitting } = props;
+  const submit = values => {
+    debugger;
+  }
   return (
-    <form className="form" onSubmit={handleSubmit}>
-      <div className="form-group">
-        <Field name="username" component={renderTextField} label="Username"/>
+    <div className="container">
+      <div className="row">
+        <div className="col-md-6 col-md-offset-3">
+          <form className="form" onSubmit={handleSubmit(submit)}>
+            <div className="form-group">
+              <Field
+                component={renderTextField}
+                fullWidth={true}
+                label="Username"
+                name="username"
+              />
+            </div>
+            <div className="form-group">
+              <Field
+                component={renderTextField}
+                fullWidth={true}
+                label="First Name"
+                name="firstName"
+              />
+            </div>
+            <div className="form-group">
+              <Field
+                component={renderTextField}
+                fullWidth={true}
+                label="Last Name"
+                name="lastName"
+              />
+            </div>
+            <div className="form-group">
+              <Field
+                component={renderTextField}
+                fullWidth={true}
+                label="Email"
+                name="email"
+                type="email"
+              />
+            </div>
+            <div className="form-group">
+              <RaisedButton
+                disabled={pristine || submitting}
+                label="Submit"
+                primary={true}
+                type="submit"
+              />
+            </div>
+          </form>
+        </div>
       </div>
-      <div className="form-group">
-        <Field name="firstName" component={renderTextField} label="First Name"/>
-      </div>
-      <div className="form-group">
-        <Field name="lastName" component={renderTextField} label="Last Name"/>
-      </div>
-      <div className="form-group">
-        <Field
-          component={renderTextField}
-          label="Email"
-          name="email"
-          type="email"
-        />
-      </div>
-      <div className="form-group">
-        <RaisedButton
-          disabled={pristine || submitting}
-          label="Submit"
-          primary={true}
-          type="submit"
-        />
-      </div>
-    </form>
+    </div>
   )
 }
 
-let Form = reduxForm({
+ProfileForm = reduxForm({
   form: 'ProfileForm',
-  // fields: [ 'username', 'firstName', 'lastName', 'email' ],
   validate
 })(ProfileForm);
 
 export default connect(
-  state => ({
-    initialValues: { email: 'asdasd' }
-  })
-)(Form);
+  state => {
+    let data = {};
+    if (state.auth.user &&
+        Object.keys(state.auth.user).length) {
+      Object.assign(
+        data, {
+        username: state.auth.user.username,
+        firstname: state.auth.user.firstname,
+        lastname: state.auth.user.lastname,
+        email: state.auth.user.email
+      });
+    }
+    return {
+      initialValues: data
+    };
+  }
+)(ProfileForm);
