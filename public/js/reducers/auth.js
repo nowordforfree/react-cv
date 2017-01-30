@@ -4,7 +4,10 @@ import {
   LOGIN_SUCCESS,
   LOGOUT_REQUEST,
   LOGOUT_FAILURE,
-  LOGOUT_SUCCESS
+  LOGOUT_SUCCESS,
+  PROFILE_UPDATE_REQUEST,
+  PROFILE_UPDATE_SUCCESS,
+  PROFILE_UPDATE_FAILURE
 } from '../actions';
 
 const initialState = {
@@ -18,15 +21,19 @@ const auth = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_REQUEST:
     case LOGOUT_REQUEST:
+    case PROFILE_UPDATE_REQUEST:
       return {
         ...state,
         isFetching: true,
         error: null
       };
     case LOGIN_SUCCESS:
+      localStorage.setItem('token', action.data.token);
+    case PROFILE_UPDATE_SUCCESS:
+      localStorage.setItem('user', JSON.stringify(action.data.user || action.data));
       return {
         ...state,
-        user: action.user,
+        user: action.data.user,
         signedIn: true,
         isFetching: false
       };
@@ -38,12 +45,15 @@ const auth = (state = initialState, action) => {
         error: action.error
       };
     case LOGOUT_FAILURE:
+    case PROFILE_UPDATE_FAILURE:
       return {
         ...state,
         isFetching: false,
         error: action.error
       };
     case LOGOUT_SUCCESS:
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
       return initialState;
     default:
       return state;

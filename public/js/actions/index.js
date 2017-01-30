@@ -7,77 +7,81 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
 export const LOGOUT_REQUEST = 'LOGOUT_REQUEST'
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS'
 export const LOGOUT_FAILURE = 'LOGOUT_FAILURE'
+export const PROFILE_UPDATE_REQUEST = 'PROFILE_UPDATE_REQUEST'
+export const PROFILE_UPDATE_SUCCESS = 'PROFILE_UPDATE_SUCCESS'
+export const PROFILE_UPDATE_FAILURE = 'PROFILE_UPDATE_FAILURE'
 export const CV_FETCH = 'CV_FETCH'
 export const CV_RECEIVED = 'CV_RECEIVED'
 export const CV_FAILURE = 'CV_FAILURE'
 
-export const login = (params) =>  dispatch => {
+export const login = (data) => dispatch => {
   dispatch({ type: LOGIN_REQUEST });
 
-  return fetch(`${API_URL}/auth/login`, params)
+  return fetch(`${API_URL}/auth/login`, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
     .then(res => res.json())
     .then(res => {
       if (res.error) {
-        return dispatch({
+        dispatch({
           type: LOGIN_FAILURE,
           error: res.error
         });
+      } else {
+        dispatch({
+          type: LOGIN_SUCCESS,
+          data: res.data
+        });
       }
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data.user));
-      dispatch({
-        type: LOGIN_SUCCESS,
-        data: res.data.user
-      });
     })
     .catch(err => {
       dispatch({
         type: LOGIN_FAILURE,
-        error: (err.message || err)
+        error: (err.error || err.message)
       });
     });
 };
 
-export const register = (params) => dispatch => {
+export const register = (data) => dispatch => {
   dispatch({ type: LOGIN_REQUEST });
 
-  return fetch(`${API_URL}/user`, params)
+  return fetch(`${API_URL}/user`, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
     .then(res => res.json())
     .then(res => {
       if (res.error) {
-        let err = '';
-        if (res.error.errors) {
-          res.error.errors.map(obj => {
-            err += obj.message + ' ';
-          });
-        } else {
-          err = res.error;
-        }
         dispatch({
           type: LOGIN_FAILURE,
-          error: err
+          error: res.error
         });
       } else {
-        login(params)(dispatch);
+        login(data)(dispatch);
       }
     })
     .catch(err => {
       dispatch({
         type: LOGIN_FAILURE,
-        error: (err.message || err)
+        error: (err.error || err.message)
       });
     })
 };
 
-export const logout = () =>  dispatch => {
+export const logout = () => dispatch => {
   dispatch({ type: LOGOUT_REQUEST });
 
   return fetch(`${API_URL}/auth/logout`, {
       method: 'post'
     })
     .then((res) => {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
       dispatch({
         type: LOGOUT_SUCCESS
       });
@@ -85,9 +89,34 @@ export const logout = () =>  dispatch => {
     .catch((err) => {
       dispatch({
         type: LOGOUT_FAILURE,
-        error: err.error
+        error: (err.error || err.message)
       });
     });
+};
+
+export const updateProfile = (userId, data) => dispatch => {
+  dispatch({ type: PROFILE_UPDATE_REQUEST });
+
+  return fetch(`${API_URL}/user/${userId}`, {
+    method: 'put',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+  .then(res => res.json())
+  .then(res => {
+    dispatch({
+      type: PROFILE_UPDATE_SUCCESS,
+      data: res.data
+    });
+  })
+  .catch(err => {
+    dispatch({
+      type: PROFILE_UPDATE_FAILURE,
+      error: (err.error || err.message)
+    })
+  });
 };
 
 export const fetchCvs = (id) => dispatch => {
@@ -107,7 +136,7 @@ export const fetchCvs = (id) => dispatch => {
     .catch(err => {
       dispatch({
         type: CV_FAILURE,
-        error: (err.message || err)
+        error: (err.error || err.message)
       });
     });
 };
@@ -124,7 +153,3 @@ export const setVisibilityFilter = (filter) => ({
   type: SET_VISIBILITY_FILTER,
   filter
 });
-
-export const showCv = (id) => {
-  fetchCvs(id);
-}

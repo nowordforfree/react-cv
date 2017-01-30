@@ -1,8 +1,8 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
+import { Field } from 'redux-form';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import Snackbar from 'material-ui/Snackbar';
 
 const validate = values => {
   const errors = {};
@@ -27,84 +27,89 @@ const renderTextField = ({ input, label, meta: { touched, error }, ...custom }) 
   />
 )
 
-let ProfileForm = props => {
-  const { handleSubmit, pristine, reset, submitting } = props;
-  const submit = values => {
-    debugger;
-  }
-  return (
-    <div className="container">
-      <div className="row">
-        <div className="col-md-6 col-md-offset-3">
-          <form className="form" onSubmit={handleSubmit(submit)}>
-            <div className="form-group">
-              <Field
-                component={renderTextField}
-                fullWidth={true}
-                label="Username"
-                name="username"
-              />
-            </div>
-            <div className="form-group">
-              <Field
-                component={renderTextField}
-                fullWidth={true}
-                label="First Name"
-                name="firstName"
-              />
-            </div>
-            <div className="form-group">
-              <Field
-                component={renderTextField}
-                fullWidth={true}
-                label="Last Name"
-                name="lastName"
-              />
-            </div>
-            <div className="form-group">
-              <Field
-                component={renderTextField}
-                fullWidth={true}
-                label="Email"
-                name="email"
-                type="email"
-              />
-            </div>
-            <div className="form-group">
-              <RaisedButton
-                disabled={pristine || submitting}
-                label="Submit"
-                primary={true}
-                type="submit"
-              />
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-ProfileForm = reduxForm({
-  form: 'ProfileForm',
-  validate
-})(ProfileForm);
-
-export default connect(
-  state => {
-    let data = {};
-    if (state.auth.user &&
-        Object.keys(state.auth.user).length) {
-      Object.assign(
-        data, {
-        username: state.auth.user.username,
-        firstname: state.auth.user.firstname,
-        lastname: state.auth.user.lastname,
-        email: state.auth.user.email
-      });
-    }
-    return {
-      initialValues: data
+export default class Profile extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false,
+      message: ''
     };
   }
-)(ProfileForm);
+  submit(values) {
+    let { userId, ...data } = values;
+    this
+      .props
+      .update(userId, data)
+      .then(() => {
+        this.setState({
+          open: true,
+          message: 'Changes saved successfully'
+        });
+      })
+      .catch(() => {
+        this.setState({
+          open: true,
+          message: 'Error occured while trying to save changes'
+        });
+      });
+  }
+  render() {
+    const { handleSubmit, pristine, submitting } = this.props;
+    return (
+      <div className="container">
+        <div className="row">
+          <div className="col-md-6 col-md-offset-3">
+            <form className="form" onSubmit={handleSubmit(this.submit.bind(this))}>
+              <div className="form-group">
+                <Field
+                  component={renderTextField}
+                  fullWidth={true}
+                  label="Username"
+                  name="username"
+                />
+              </div>
+              <div className="form-group">
+                <Field
+                  component={renderTextField}
+                  fullWidth={true}
+                  label="First Name"
+                  name="firstname"
+                />
+              </div>
+              <div className="form-group">
+                <Field
+                  component={renderTextField}
+                  fullWidth={true}
+                  label="Last Name"
+                  name="lastname"
+                />
+              </div>
+              <div className="form-group">
+                <Field
+                  component={renderTextField}
+                  fullWidth={true}
+                  label="Email"
+                  name="email"
+                  type="email"
+                />
+              </div>
+              <div className="form-group">
+                <RaisedButton
+                  disabled={pristine || submitting}
+                  label="Submit"
+                  primary={true}
+                  type="submit"
+                />
+              </div>
+            </form>
+          </div>
+        </div>
+        <Snackbar
+          open={this.state.open}
+          message={this.state.message}
+          autoHideDuration={2000}
+        />
+      </div>
+    );
+  }
+};

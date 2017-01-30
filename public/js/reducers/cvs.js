@@ -9,6 +9,7 @@ import {
 const initialState = {
   items: [],
   isFetching: false,
+  filter: 'SHOW_ALL',
   error: null
 };
 

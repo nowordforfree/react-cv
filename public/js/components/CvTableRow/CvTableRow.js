@@ -2,7 +2,7 @@ import React from 'react';
 import { TableRow, TableRowColumn } from 'material-ui';
 
 export default (props) => (
-  <TableRow key={props.data.id}>
+  <TableRow key={props.data.id} onRowClick={props.onClick}>
     <TableRowColumn>{props.data.id}</TableRowColumn>
     <TableRowColumn>{props.data.firstname}</TableRowColumn>
     <TableRowColumn>{props.data.lastname}</TableRowColumn>

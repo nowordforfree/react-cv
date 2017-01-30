@@ -55,6 +55,11 @@ module.exports = (sequelize, DataTypes) => {
     instanceMethods: {
       comparePassword: function (val) {
         return bcrypt.compareSync(val, this.password);
+      },
+      toJSON: function () {
+        let values = Object.assign({}, this.get());
+        delete values.password;
+        return values;
       }
     }
   });

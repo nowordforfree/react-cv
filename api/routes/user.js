@@ -3,8 +3,8 @@ const db      = require('../models');
 const router  = express.Router();
 
 function validateEmail(email) {
-  var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(email);
+  const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+  return emailRegex.test(email);
 }
 
 router.get('/', (req, res) => {
@@ -69,8 +69,18 @@ router.post('/', (req, res, next) => {
     .then((user) => {
       res.json({ data: user });
     })
+    .catch(db.Sequelize.ValidationError, err => {
+      res
+        .status(400)
+        .json({
+          error: err.errors.reduce((res, obj) => {
+            res += obj.message + '\n';
+            return res;
+          }, '')
+        });
+    })
     .catch((err) => {
-      res.json({ error: err });
+      res.status(500).json({ error: err });
     });
 });
 
@@ -91,8 +101,8 @@ router.put('/:id', (req, res) => {
       }
       user
         .update(req.body)
-        .then((arg) => {
-          res.json({ data: arg });
+        .then(updatedUser => {
+          res.json({ data: updatedUser });
         })
         .catch((err) => {
           res.json({ error: err });

@@ -4,8 +4,8 @@ import { IndexRoute, Route, Router } from 'react-router';
 import Error404 from './components/Error404';
 import Root from './components/Root';
 import Home from './components/Home';
-import Login from './components/Login';
-import Profile from './components/Profile';
+import Auth from './components/Auth';
+import Profile from './containers/ProfileForm';
 import store from './store';
 
 function isLoggedIn(nextState, replace, callback) {
@@ -19,7 +19,7 @@ function isLoggedIn(nextState, replace, callback) {
 const routes =
   <Route path='/' component={Root}>
     <IndexRoute component={Home} onEnter={isLoggedIn} />
-    <Route path='login' component={Login}/>
+    <Route path='login' component={Auth}/>
     <Route path='profile' component={Profile} onEnter={isLoggedIn} />
     <Route path='*' component={Error404}/>
   </Route>;
