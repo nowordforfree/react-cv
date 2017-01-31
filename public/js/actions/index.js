@@ -1,6 +1,7 @@
 export const CV_ADD = 'CV_ADD'
 export const CV_SHOW = 'CV_SHOW'
-export const SET_VISIBILITY_FILTER = 'SET_VISIBILITY_FILTER'
+export const CV_SEARCH = 'CV_SEARCH'
+export const CV_SEARCH_RESET = 'CV_SEARCH_RESET'
 export const LOGIN_REQUEST = 'LOGIN_REQUEST'
 export const LOGIN_FAILURE = 'LOGIN_FAILURE'
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
@@ -149,7 +150,24 @@ export const addCv = (data) => ({
   data
 });
 
-export const setVisibilityFilter = (filter) => ({
-  type: SET_VISIBILITY_FILTER,
-  filter
-});
+export const setVisibilityFilter = (filter) => dispatch => {
+  if (filter && filter.text) {
+    let resFilter = {};
+    if (typeof filter === 'string') {
+      resFilter = {
+        type: 'FUZZY',
+        text: filter
+      };
+    } else if (typeof filter === 'object') {
+      resFilter = filter;
+    } else {
+      throw new Error('Unknown filter type');
+    }
+    dispatch({
+      type: CV_SEARCH,
+      filter: resFilter
+    });
+  } else {
+    dispatch({ type: CV_SEARCH_RESET });
+  }
+};

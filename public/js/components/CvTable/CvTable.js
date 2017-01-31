@@ -1,12 +1,12 @@
 import React from 'react';
 import {
-  AutoComplete,
   Table,
   TableHeader,
   TableHeaderColumn,
   TableBody,
   TableRow,
-  TableRowColumn
+  TableRowColumn,
+  TextField
 } from 'material-ui';
 import CvTableRow from '../CvTableRow';
 
@@ -14,16 +14,15 @@ export default class CvList extends React.Component {
   componentDidMount() {
     this.props.fetchCvs();
   }
-  filterStore() {
-    debugger
+  filterStore(e, newValue) {
+    this.props.setFilter(newValue);
   }
   render() {
     return (
       <div className="container">
-        <AutoComplete
+        <TextField
           floatingLabelText="Search CVs"
-          dataSource={this.props.cvs}
-          onUpdateInput={this.filterStore.bind(this)}
+          onChange={this.filterStore.bind(this)}
         />
         <br />
         <Table selectable={false} fixedHeader={true} >
@@ -47,7 +46,7 @@ export default class CvList extends React.Component {
                 ) :
                 <TableRow>
                   <TableRowColumn colSpan={4} style={{textAlign: 'center'}}>
-                    No items
+                    No items found
                   </TableRowColumn>
                 </TableRow>
             }
