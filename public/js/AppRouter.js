@@ -6,6 +6,7 @@ import Root from './components/Root';
 import Home from './components/Home';
 import Auth from './components/Auth';
 import Profile from './containers/ProfileForm';
+import CvForm from './containers/CvForm';
 import store from './store';
 
 function isLoggedIn(nextState, replace, callback) {
@@ -21,6 +22,8 @@ const routes =
     <IndexRoute component={Home} onEnter={isLoggedIn} />
     <Route path='login' component={Auth}/>
     <Route path='profile' component={Profile} onEnter={isLoggedIn} />
+    <Route path='cv' component={CvForm} onEnter={isLoggedIn} />
+    <Route path='cv/:cvId' component={CvForm} onEnter={isLoggedIn} />
     <Route path='*' component={Error404}/>
   </Route>;
 
