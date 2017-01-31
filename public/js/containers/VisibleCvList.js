@@ -8,8 +8,8 @@ const getVisibleCvList = (cvs, filter) => {
       return cvs;
     case 'FUZZY':
       return cvs.filter(cv => {
+        const searchRe = new RegExp(filter.text, 'i');
         return Object.keys(cv).some(key => {
-          const searchRe = new RegExp(filter.text, 'i');
           if (cv[key] instanceof Array) {
             return Object.keys(cv[key]).some(subKey => {
               return searchRe.test(cv[key][subKey]);
@@ -21,8 +21,8 @@ const getVisibleCvList = (cvs, filter) => {
       });
     case 'STRICT':
       return cvs.filter(cv => {
+        const searchRe = new RegExp(filter.text);
         return Object.keys(cv).some(key => {
-          const searchRe = new RegExp(filter.text);
           if (cv[key] instanceof Array) {
             return Object.keys(cv[key]).some(subKey => {
               return searchRe.test(cv[key][subKey]);

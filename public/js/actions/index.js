@@ -151,7 +151,8 @@ export const addCv = (data) => ({
 });
 
 export const setVisibilityFilter = (filter) => dispatch => {
-  if (filter && filter.text) {
+  if (filter.length ||
+     (filter.text && filter.text.length)) {
     let resFilter = {};
     if (typeof filter === 'string') {
       resFilter = {
