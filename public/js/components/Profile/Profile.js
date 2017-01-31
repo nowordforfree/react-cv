@@ -96,7 +96,7 @@ export default class Profile extends React.Component {
               <div className="form-group">
                 <RaisedButton
                   disabled={pristine || submitting}
-                  label="Submit"
+                  label="Update"
                   primary={true}
                   type="submit"
                 />
