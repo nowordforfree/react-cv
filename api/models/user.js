@@ -1,4 +1,6 @@
-const bcrypt = require('bcrypt');
+const crypto    = require('crypto');
+const algorithm = 'aes-256-cbc';
+const secret    = 'aSecretKey';
 
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('User', {
@@ -40,21 +42,28 @@ module.exports = (sequelize, DataTypes) => {
           throw new Error('Password should contain at least 6 characters')
         }
         return new Promise((resolve, reject) => {
-          bcrypt
-            .hash(user.password, 8)
-            .then((hash) => {
-              user.password = hash;
-              resolve(user);
-            })
-            .catch((err) => {
-              reject(err);
-            })
+          const cipher = crypto.createCipher(algorithm, secret);
+          try {
+            let encrypted = cipher.update(user.password, 'utf8', 'hex');
+            encrypted += cipher.final('hex');
+            user.password = encrypted;
+            resolve(user);
+          } catch (e) {
+            reject(e);
+          }
         });
       }
     },
     instanceMethods: {
       comparePassword: function (val) {
-        return bcrypt.compareSync(val, this.password);
+        const decipher = crypto.createDecipher(algorithm, secret);
+        try {
+          let decrypted = decipher.update(this.password, 'hex', 'utf8');
+          decrypted += decipher.final('utf8');
+          return val === decrypted;
+        } catch(e) {
+          return false;
+        }
       },
       toJSON: function () {
         let values = Object.assign({}, this.get());
