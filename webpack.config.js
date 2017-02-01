@@ -4,9 +4,11 @@ const WebpackNotifierPlugin = require('webpack-notifier');
 const config = require('./config');
 
 module.exports = {
-	entry: {
-		app: [ './public/js/index.js' ]
-	},
+	entry: [
+		'react-hot-loader/patch',
+		`webpack-dev-server/client?http://${config.app.host}:${config.app.port}`,
+		'./public/js/index.js'
+	],
 	output: {
 		path: path.join(__dirname, 'public'),
 		publicPath: '/public',
@@ -33,6 +35,7 @@ module.exports = {
 	},
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
+		new webpack.NamedModulesPlugin(),
     new WebpackNotifierPlugin(),
 		new webpack.DefinePlugin({
 			API_URL: JSON.stringify(`http://${config.api.host}:${config.api.port}/api`),
