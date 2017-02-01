@@ -18,18 +18,25 @@ const renderTextField = ({ input, label, meta: { touched, error }, ...custom }) 
   />
 )
 
+let initialState = {
+  cv: {
+    firstname: '',
+    lastname: '',
+    role: '',
+    communication: '',
+    education: '',
+    tools: []
+  },
+  toolsInput: ''
+};
+
 export default class CvForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      cv: {
-        tools: [
-          'AngularJS',
-          'ReactJS',
-          'Webpack'
-        ]
-      }
-    };
+    if (props.cv) {
+      initialState = Object.assign(initialState, props.cv);
+    }
+    this.state = initialState;
     this.styles = {
       chip: {
         margin: 4,
@@ -56,19 +63,27 @@ export default class CvForm extends React.Component {
       return;
     }
     e.preventDefault();
-    let cv = this.state.cv;
-    cv.tools.push(e.target.value);
-    this.setState({ cv: cv });
-    e.target.value = '';
+    let updatedCv = Object.assign({}, this.state.cv);
+    let tools = this.state.cv.tools.slice();
+    tools.push(e.target.value);
+    updatedCv.tools = tools;
+    this.setState({
+      cv: updatedCv,
+      toolsInput: initialState.toolsInput
+    });
   }
   removeTool(key) {
-    let cv = this.state.cv;
-    cv.tools.splice(cv.tools.indexOf(key), 1);
-    this.setState({ cv: cv });
+    let tools = this.state.cv.tools.slice();
+    tools.splice(tools.indexOf(key), 1);
+    this.setState({ cv: { tools: tools } });
   }
   submit(values) {
     // not implemented yet
+    console.log(this.state.cv);
     return false;
+  }
+  onValueChange(e, newValue) {
+    this.setState({toolsInput: newValue})
   }
   render() {
     const { handleSubmit, pristine, submitting } = this.props;
@@ -81,9 +96,10 @@ export default class CvForm extends React.Component {
               <div className="col-sm-9">
                 <Field
                   component={renderTextField}
-                  name="firstname"
-                  id="firstname"
                   fullWidth={true}
+                  id="firstname"
+                  name="firstname"
+                  value={this.state.cv.firstname}
                 />
               </div>
             </div>
@@ -92,9 +108,10 @@ export default class CvForm extends React.Component {
               <div className="col-sm-9">
                 <Field
                   component={renderTextField}
-                  name="lastname"
-                  id="lastname"
                   fullWidth={true}
+                  id="lastname"
+                  name="lastname"
+                  value={this.state.cv.lastname}
                 />
               </div>
             </div>
@@ -103,9 +120,11 @@ export default class CvForm extends React.Component {
               <div className="col-sm-9">
                 <Field
                   component={renderTextField}
-                  name="role"
-                  id="role"
                   fullWidth={true}
+                  hintText="Current position"
+                  id="role"
+                  name="role"
+                  value={this.state.cv.role}
                 />
               </div>
             </div>
@@ -116,9 +135,11 @@ export default class CvForm extends React.Component {
               <div className="col-sm-9">
                 <Field
                   component={renderTextField}
-                  name="communication"
-                  id="communication"
                   fullWidth={true}
+                  hintText="Languages and proficiency"
+                  id="communication"
+                  name="communication"
+                  value={this.state.cv.communication}
                 />
               </div>
             </div>
@@ -127,9 +148,10 @@ export default class CvForm extends React.Component {
               <div className="col-sm-9">
                 <Field
                   component={renderTextField}
-                  name="education"
-                  id="education"
                   fullWidth={true}
+                  id="education"
+                  name="education"
+                  value={this.state.cv.education}
                 />
               </div>
             </div>
@@ -139,15 +161,62 @@ export default class CvForm extends React.Component {
               </label>
               <div className="col-sm-9">
                 <Field
-                  component={renderTextField}
-                  hintText='Press "Enter" to add new record'
+                  component={() => {
+                    // HACK. If passing onKeyDown
+                    // to Field - input is not being cleared
+                    return (
+                      <TextField
+                        fullWidth={true}
+                        hintText='Press "Enter" to add new record'
+                        id="tools"
+                        onKeyDown={this.addTool.bind(this)}
+                      />
+                    )
+                  }}
+                  value={this.state.toolsInput}
                   name="tools"
-                  id="tools"
-                  fullWidth={true}
-                  onKeyDown={this.addTool.bind(this)}
                 />
                 <div style={this.styles.wrapper} >
                   {this.state.cv.tools.map(this.renderChip, this)}
+                </div>
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="col-sm-3 control-label" htmlFor="experience">Experience</label>
+              <div className="col-sm-9">
+                <div className="row">
+                  <div className="col-sm-6">
+                    <TextField
+                      fullWidth={true}
+                      hintText="Since"
+                      min="1950"
+                      max={new Date().getFullYear()}
+                      type="number"
+                    />
+                  </div>
+                  <div className="col-sm-6">
+                    <TextField
+                      fullWidth={true}
+                      hintText="Till"
+                      min="1950"
+                      max={new Date().getFullYear()}
+                      type="number"
+                    />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-sm-6">
+                    <TextField
+                      fullWidth={true}
+                      hintText="Company"
+                    />
+                  </div>
+                  <div className="col-sm-6">
+                    <TextField
+                      fullWidth={true}
+                      hintText="Position (role)"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
