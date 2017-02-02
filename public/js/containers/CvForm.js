@@ -10,6 +10,10 @@ const validate = values => {
       errors[ field ] = 'This field is required'
     }
   });
+  if (values.since && values.till &&
+     (values.since > values.till)) {
+    errors.since = '"Since" should be less then "Till"'
+  }
   return errors
 }
 

@@ -1,11 +1,15 @@
 import React from 'react';
-import { Field } from 'redux-form';
+import { Field, change, stopSubmit } from 'redux-form';
 import {
   Chip,
+  IconButton,
   RaisedButton,
   Snackbar,
   TextField
  } from 'material-ui';
+import BlockExperience from './BlockExperience';
+import BlockProjects from './BlockProjects';
+import AddIcon from 'material-ui/svg-icons/content/add';
 
 import './CvForm.less';
 
@@ -25,7 +29,9 @@ let initialState = {
     role: '',
     communication: '',
     education: '',
-    tools: []
+    tools: [],
+    experiences: [],
+    projects: []
   },
   toolsInput: ''
 };
@@ -44,7 +50,7 @@ export default class CvForm extends React.Component {
       wrapper: {
         display: 'flex',
         flexWrap: 'wrap',
-      },
+      }
     };
   }
   renderChip(data) {
@@ -58,15 +64,32 @@ export default class CvForm extends React.Component {
       </Chip>
     );
   }
+  changedTool(e, value) {
+    const err = this.validateTool(value);
+    console.log(value)
+    if (err) {
+      this.props.dispatch(stopSubmit(this.props.form, { tools: err }));
+    }
+    return err;
+  }
+  validateTool(value) {
+    return this.state.cv.tools.indexOf(value) > -1 ?
+            'You already added this' :
+            undefined;
+  }
   addTool(e) {
     if (e.keyCode !== 13 || !e.target.value) {
       return;
     }
     e.preventDefault();
+    if (this.changedTool(null, e.target.value)) {
+      return;
+    }
     let updatedCv = Object.assign({}, this.state.cv);
-    let tools = this.state.cv.tools.slice();
+    let tools = updatedCv.tools.slice();
     tools.push(e.target.value);
     updatedCv.tools = tools;
+    this.props.dispatch(change(this.props.form, 'tools', ''));
     this.setState({
       cv: updatedCv,
       toolsInput: initialState.toolsInput
@@ -81,9 +104,6 @@ export default class CvForm extends React.Component {
     // not implemented yet
     console.log(this.state.cv);
     return false;
-  }
-  onValueChange(e, newValue) {
-    this.setState({toolsInput: newValue})
   }
   render() {
     const { handleSubmit, pristine, submitting } = this.props;
@@ -161,20 +181,15 @@ export default class CvForm extends React.Component {
               </label>
               <div className="col-sm-9">
                 <Field
-                  component={() => {
-                    // HACK. If passing onKeyDown
-                    // to Field - input is not being cleared
-                    return (
-                      <TextField
-                        fullWidth={true}
-                        hintText='Press "Enter" to add new record'
-                        id="tools"
-                        onKeyDown={this.addTool.bind(this)}
-                      />
-                    )
-                  }}
-                  value={this.state.toolsInput}
+                  component={renderTextField}
+                  fullWidth={true}
+                  hintText='Press "Enter" to add new record'
+                  id="tools"
                   name="tools"
+                  value={this.state.toolsInput}
+                  onKeyDown={this.addTool.bind(this)}
+                  onChange={this.changedTool.bind(this)}
+                  validate={this.validateTool.bind(this)}
                 />
                 <div style={this.styles.wrapper} >
                   {this.state.cv.tools.map(this.renderChip, this)}
@@ -183,42 +198,30 @@ export default class CvForm extends React.Component {
             </div>
             <div className="form-group">
               <label className="col-sm-3 control-label" htmlFor="experience">Experience</label>
-              <div className="col-sm-9">
-                <div className="row">
-                  <div className="col-sm-6">
-                    <TextField
-                      fullWidth={true}
-                      hintText="Since"
-                      min="1950"
-                      max={new Date().getFullYear()}
-                      type="number"
-                    />
-                  </div>
-                  <div className="col-sm-6">
-                    <TextField
-                      fullWidth={true}
-                      hintText="Till"
-                      min="1950"
-                      max={new Date().getFullYear()}
-                      type="number"
-                    />
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-sm-6">
-                    <TextField
-                      fullWidth={true}
-                      hintText="Company"
-                    />
-                  </div>
-                  <div className="col-sm-6">
-                    <TextField
-                      fullWidth={true}
-                      hintText="Position (role)"
-                    />
-                  </div>
-                </div>
-              </div>
+              <BlockExperience
+                class="col-sm-9"
+                fieldRenderFn={renderTextField}
+              />
+            </div>
+            <div className="form-group">
+              <label className="col-sm-3 control-label" style={{ paddingTop: 2 }}>
+                Projects
+                <IconButton
+                  tooltip="Add Project"
+                  iconStyle={{ height: 18, width: 18 }}
+                  style={{
+                    height: 44,
+                    width: 44,
+                    padding: 8,
+                    verticalAlign: 'middle'
+                  }}>
+                  <AddIcon />
+                </IconButton>
+              </label>
+              <BlockProjects
+                class="col-sm-9"
+                fieldRenderFn={renderTextField}
+              />
             </div>
             <div className="form-group">
               <RaisedButton
