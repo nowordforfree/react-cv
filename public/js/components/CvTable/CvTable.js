@@ -10,7 +10,7 @@ import {
 } from 'material-ui';
 import CvTableRow from '../CvTableRow';
 
-export default class CvList extends React.Component {
+class CvList extends React.Component {
   componentDidMount() {
     this.props.fetchCvs();
   }
@@ -41,7 +41,10 @@ export default class CvList extends React.Component {
                   <CvTableRow
                     key={ cv.id }
                     data={ cv }
-                    // onClick={() => this.props.fetchCvs(cv.id) }
+                    onClick={() => this.context.router.push({
+                      pathname: `cv/${cv.id}`,
+                      state: { cv: cv }
+                    }) }
                   />
                 ) :
                 <TableRow>
@@ -56,3 +59,9 @@ export default class CvList extends React.Component {
     );
   }
 }
+
+CvList.contextTypes = {
+  router: React.PropTypes.object.isRequired
+};
+
+export default CvList;

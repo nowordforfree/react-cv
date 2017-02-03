@@ -35,30 +35,47 @@ let initialState = {
   },
   toolsInput: ''
 };
+const styles = {
+  block: {
+    label: {
+      paddingTop: 2
+    },
+    iconButton: {
+      height: 44,
+      width: 44,
+      padding: 8,
+      verticalAlign: 'middle'
+    },
+    iconStyle: {
+      height: 18,
+      width: 18
+    }
+  },
+  chip: {
+    margin: 4,
+  },
+  wrapper: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  }
+};
 
 export default class CvForm extends React.Component {
   constructor(props) {
     super(props);
-    if (props.cv) {
-      initialState = Object.assign(initialState, props.cv);
+    const firstState = initialState;
+    if (props.location.state &&
+        props.location.state.cv) {
+      firstState.cv = props.location.state.cv;
     }
-    this.state = initialState;
-    this.styles = {
-      chip: {
-        margin: 4,
-      },
-      wrapper: {
-        display: 'flex',
-        flexWrap: 'wrap',
-      }
-    };
+    this.state = firstState;
   }
   renderChip(data) {
     return (
       <Chip
         key={data}
         onRequestDelete={() => this.removeTool(data)}
-        style={this.styles.chip}
+        style={styles.chip}
       >
         {data}
       </Chip>
@@ -66,7 +83,6 @@ export default class CvForm extends React.Component {
   }
   changedTool(e, value) {
     const err = this.validateTool(value);
-    console.log(value)
     if (err) {
       this.props.dispatch(stopSubmit(this.props.form, { tools: err }));
     }
@@ -96,9 +112,32 @@ export default class CvForm extends React.Component {
     });
   }
   removeTool(key) {
-    let tools = this.state.cv.tools.slice();
+    let updatedCv = Object.assign({}, this.state.cv);
+    let tools = updatedCv.tools.slice();
     tools.splice(tools.indexOf(key), 1);
-    this.setState({ cv: { tools: tools } });
+    updatedCv.tools = tools;
+    this.setState({ cv: updatedCv });
+  }
+  addExperience() {
+    const newExperience = {
+      company: '',
+      role: '',
+      since: '',
+      till: ''
+    };
+    let updatedCv = Object.assign({}, this.state.cv);
+    updatedCv.experiences = updatedCv.experiences.concat([newExperience]);
+    this.setState({ cv: updatedCv });
+  }
+  addProject() {
+    const newProject = {
+      description: '',
+      role: '',
+      title: ''
+    };
+    let updatedCv = Object.assign({}, this.state.cv);
+    updatedCv.projects = updatedCv.projects.concat([newProject]);
+    this.setState({ cv: updatedCv });
   }
   submit(values) {
     // not implemented yet
@@ -191,36 +230,45 @@ export default class CvForm extends React.Component {
                   onChange={this.changedTool.bind(this)}
                   validate={this.validateTool.bind(this)}
                 />
-                <div style={this.styles.wrapper} >
+                <div style={styles.wrapper} >
                   {this.state.cv.tools.map(this.renderChip, this)}
                 </div>
               </div>
             </div>
             <div className="form-group">
-              <label className="col-sm-3 control-label" htmlFor="experience">Experience</label>
+              <label className="col-sm-3 control-label" style={styles.block.label}>
+                Experience
+                <IconButton
+                  tooltip="Add Experience"
+                  iconStyle={styles.block.iconStyle}
+                  style={styles.block.iconButton}
+                  onClick={this.addExperience.bind(this)}
+                >
+                  <AddIcon />
+                </IconButton>
+              </label>
               <BlockExperience
                 class="col-sm-9"
                 fieldRenderFn={renderTextField}
+                data={this.state.cv.experiences}
               />
             </div>
             <div className="form-group">
-              <label className="col-sm-3 control-label" style={{ paddingTop: 2 }}>
+              <label className="col-sm-3 control-label" style={styles.block.label}>
                 Projects
                 <IconButton
                   tooltip="Add Project"
-                  iconStyle={{ height: 18, width: 18 }}
-                  style={{
-                    height: 44,
-                    width: 44,
-                    padding: 8,
-                    verticalAlign: 'middle'
-                  }}>
+                  iconStyle={styles.block.iconStyle}
+                  style={styles.block.iconButton}
+                  onClick={this.addProject.bind(this)}
+                >
                   <AddIcon />
                 </IconButton>
               </label>
               <BlockProjects
                 class="col-sm-9"
                 fieldRenderFn={renderTextField}
+                data={this.state.cv.projects}
               />
             </div>
             <div className="form-group">
