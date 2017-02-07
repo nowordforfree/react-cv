@@ -12,7 +12,7 @@ export default (props) => {
                 component={props.fieldRenderFn}
                 fullWidth={true}
                 hintText="Project Title"
-                name={`title`}
+                name={`cv.projects[${i}].title`}
                 value={obj.title}
               />
             </div>
@@ -21,7 +21,7 @@ export default (props) => {
                 component={props.fieldRenderFn}
                 fullWidth={true}
                 hintText="Role in project (position)"
-                name={`position`}
+                name={`cv.projects[${i}].position`}
                 value={obj.role}
               />
             </div>
@@ -33,7 +33,7 @@ export default (props) => {
                 fullWidth={true}
                 hintText="Description"
                 multiLine={true}
-                name={`description`}
+                name={`cv.projects[${i}].description`}
                 rows={2}
                 rowsMax={4}
                 value={obj.description}

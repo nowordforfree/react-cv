@@ -15,9 +15,10 @@ export default (props) => {
                 hintText="Since"
                 max={maxYear}
                 min="1950"
-                name={`since`}
+                name={`cv.experiences[${i}].since`}
                 type="number"
                 value={obj.since}
+                onChange={props.onChange}
               />
             </div>
             <div className="col-sm-6">
@@ -27,9 +28,10 @@ export default (props) => {
                 hintText="Till"
                 max={maxYear}
                 min="1950"
-                name={`till`}
+                name={`cv.experiences[${i}].till`}
                 type="number"
                 value={obj.till}
+                onChange={props.onChange}
               />
             </div>
           </div>
@@ -39,8 +41,9 @@ export default (props) => {
                 component={props.fieldRenderFn}
                 fullWidth={true}
                 hintText="Company"
-                name={`experienceCompany`}
+                name={`cv.experiences[${i}].company`}
                 value={obj.company}
+                onChange={props.onChange}
               />
             </div>
             <div className="col-sm-6">
@@ -48,8 +51,9 @@ export default (props) => {
                 component={props.fieldRenderFn}
                 fullWidth={true}
                 hintText="Position (role)"
-                name={`experienceRole`}
+                name={`cv.experiences[${i}].role`}
                 value={obj.role}
+                onChange={props.onChange}
               />
             </div>
           </div>

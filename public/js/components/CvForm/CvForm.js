@@ -63,29 +63,36 @@ export default class CvForm extends React.Component {
       },
       toolsInput: ''
     };
+    this.submitBtnText = 'Create';
     const firstState = this.initialState;
     if (props.location.state &&
         props.location.state.cv) {
       firstState.cv = props.location.state.cv;
+      this.submitBtnText = 'Update';
     }
     this.state = firstState;
-    this.props.initialize(this.state.cv);
+    this.props.initialize(this.state);
   }
-  renderChip(data) {
+  renderChip(data, i) {
     return (
-      <Chip
+      <Field
+        name={`cv.tools[${i}]`}
         key={data}
-        onRequestDelete={() => this.removeTool(data)}
-        style={styles.chip}
-      >
-        {data}
-      </Chip>
+        component={() => (
+          <Chip
+            onRequestDelete={() => this.removeTool(data)}
+            style={styles.chip}
+          >
+            {data}
+          </Chip>
+        )}
+      />
     );
   }
   changedTool(e, value) {
     const err = this.validateTool(value);
     if (err) {
-      this.props.stopSubmit(this.props.form, { tools: err });
+      this.props.notSubmit(this.props.form, { toolsInput: err });
     }
     return err;
   }
@@ -106,7 +113,7 @@ export default class CvForm extends React.Component {
     let tools = updatedCv.tools.slice();
     tools.push(e.target.value);
     updatedCv.tools = tools;
-    this.props.change(this.props.form, 'tools', '');
+    this.props.change(this.props.form, 'toolsInput', '');
     this.setState({
       cv: updatedCv,
       toolsInput: this.initialState.toolsInput
@@ -130,6 +137,25 @@ export default class CvForm extends React.Component {
     updatedCv.experiences = updatedCv.experiences.concat([newExperience]);
     this.setState({ cv: updatedCv });
   }
+  accessKeyByString(o, s, v) {
+    s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+    s = s.replace(/^\./, '');           // strip a leading dot
+    const a = s.split('.');
+    for (let i = 0, n = a.length; i < n; ++i) {
+      const k = a[i];
+      if (k in o) {
+        if (i === n - 1 &&
+            v !== null &&
+            v !== undefined) {
+          o[k] = v;
+        }
+        o = o[k];
+      } else {
+        return;
+      }
+    }
+    return o;
+  }
   addProject() {
     const newProject = {
       description: '',
@@ -139,6 +165,13 @@ export default class CvForm extends React.Component {
     let updatedCv = Object.assign({}, this.state.cv);
     updatedCv.projects = updatedCv.projects.concat([newProject]);
     this.setState({ cv: updatedCv });
+  }
+  handleChange(e, newValue) {
+    // const target = e.target;
+    // let updatedCv = Object.assign({}, this.state.cv);
+    // this.accessKeyByString(updatedCv, target.name, newValue);
+    // this.setState({ cv: updatedCv });
+    // console.log(target.name)
   }
   submit(values) {
     // not implemented yet
@@ -158,8 +191,9 @@ export default class CvForm extends React.Component {
                   component={renderTextField}
                   fullWidth={true}
                   id="firstname"
-                  name="firstname"
+                  name="cv.firstname"
                   value={this.state.cv.firstname}
+                  onChange={this.handleChange.bind(this)}
                 />
               </div>
             </div>
@@ -170,8 +204,9 @@ export default class CvForm extends React.Component {
                   component={renderTextField}
                   fullWidth={true}
                   id="lastname"
-                  name="lastname"
+                  name="cv.lastname"
                   value={this.state.cv.lastname}
+                  onChange={this.handleChange.bind(this)}
                 />
               </div>
             </div>
@@ -183,8 +218,9 @@ export default class CvForm extends React.Component {
                   fullWidth={true}
                   hintText="Current position"
                   id="role"
-                  name="role"
+                  name="cv.role"
                   value={this.state.cv.role}
+                  onChange={this.handleChange.bind(this)}
                 />
               </div>
             </div>
@@ -198,8 +234,9 @@ export default class CvForm extends React.Component {
                   fullWidth={true}
                   hintText="Languages and proficiency"
                   id="communication"
-                  name="communication"
+                  name="cv.communication"
                   value={this.state.cv.communication}
+                  onChange={this.handleChange.bind(this)}
                 />
               </div>
             </div>
@@ -210,7 +247,7 @@ export default class CvForm extends React.Component {
                   component={renderTextField}
                   fullWidth={true}
                   id="education"
-                  name="education"
+                  name="cv.education"
                   value={this.state.cv.education}
                 />
               </div>
@@ -225,7 +262,7 @@ export default class CvForm extends React.Component {
                   fullWidth={true}
                   hintText='Press "Enter" to add new record'
                   id="tools"
-                  name="tools"
+                  name="toolsInput"
                   value={this.state.toolsInput}
                   onKeyDown={this.addTool.bind(this)}
                   onChange={this.changedTool.bind(this)}
@@ -252,6 +289,7 @@ export default class CvForm extends React.Component {
                 class="col-sm-9"
                 fieldRenderFn={renderTextField}
                 data={this.state.cv.experiences}
+                onChange={this.handleChange.bind(this)}
               />
             </div>
             <div className="form-group">
@@ -275,7 +313,7 @@ export default class CvForm extends React.Component {
             <div className="form-group">
               <RaisedButton
                 disabled={pristine || submitting}
-                label="Create"
+                label={this.submitBtnText}
                 primary={true}
                 type="submit"
               />

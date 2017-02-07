@@ -28,5 +28,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps,
-  { initialize, change, stopSubmit }
+  { initialize, change, notSubmit: stopSubmit }
 )(MainCvForm);
