@@ -22,19 +22,6 @@ const renderTextField = ({ input, label, meta: { touched, error }, ...custom }) 
   />
 )
 
-let initialState = {
-  cv: {
-    firstname: '',
-    lastname: '',
-    role: '',
-    communication: '',
-    education: '',
-    tools: [],
-    experiences: [],
-    projects: []
-  },
-  toolsInput: ''
-};
 const styles = {
   block: {
     label: {
@@ -63,12 +50,26 @@ const styles = {
 export default class CvForm extends React.Component {
   constructor(props) {
     super(props);
-    const firstState = initialState;
+    this.initialState = {
+      cv: {
+        firstname: '',
+        lastname: '',
+        role: '',
+        communication: '',
+        education: '',
+        tools: [],
+        experiences: [],
+        projects: []
+      },
+      toolsInput: ''
+    };
+    const firstState = this.initialState;
     if (props.location.state &&
         props.location.state.cv) {
       firstState.cv = props.location.state.cv;
     }
     this.state = firstState;
+    this.props.initialize(this.state.cv);
   }
   renderChip(data) {
     return (
@@ -84,7 +85,7 @@ export default class CvForm extends React.Component {
   changedTool(e, value) {
     const err = this.validateTool(value);
     if (err) {
-      this.props.dispatch(stopSubmit(this.props.form, { tools: err }));
+      this.props.stopSubmit(this.props.form, { tools: err });
     }
     return err;
   }
@@ -105,10 +106,10 @@ export default class CvForm extends React.Component {
     let tools = updatedCv.tools.slice();
     tools.push(e.target.value);
     updatedCv.tools = tools;
-    this.props.dispatch(change(this.props.form, 'tools', ''));
+    this.props.change(this.props.form, 'tools', '');
     this.setState({
       cv: updatedCv,
-      toolsInput: initialState.toolsInput
+      toolsInput: this.initialState.toolsInput
     });
   }
   removeTool(key) {

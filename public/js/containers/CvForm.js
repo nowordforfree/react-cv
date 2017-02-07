@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
+import { reduxForm, initialize, change, stopSubmit } from 'redux-form';
 import CvForm from '../components/CvForm';
 
 const validate = values => {
@@ -27,5 +27,6 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  { initialize, change, stopSubmit }
 )(MainCvForm);
