@@ -77,7 +77,13 @@ router.put('/:id', (req, res) => {
           error: `Cv with ID ${req.params.id} was not found`
         });
       }
-      cv.update(req.body)
+      db
+        .sequelize
+        .transaction((t) => {
+          return cv.update(req.body, {
+            transaction: t
+          });
+        })
         .then((arg) => {
           res.json({ data: arg });
         })

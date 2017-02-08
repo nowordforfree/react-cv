@@ -61,6 +61,10 @@ export default class CvForm extends React.Component {
         role: '',
         tools: []
       },
+      snackbar: {
+        message: '',
+        open: false
+      },
       toolsInput: ''
     };
     this.submitBtnText = 'Create';
@@ -147,7 +151,22 @@ export default class CvForm extends React.Component {
   }
   submit(values) {
     if (this.cvId) {
-      this.props.updateCv(this.cvId, values);
+      this.props.updateCv(this.cvId, values.cv).then(() => {
+        this.setState({
+          snackbar: {
+            open: true,
+            message: 'Changes saved successfully'
+          }
+        });
+      })
+      .catch(err => {
+        this.setState({
+          snackbar: {
+            open: true,
+            message: 'Some error occured while trying to save changes'
+          }
+        });
+      });
     } else {
       this.props.createCv(values.cv);
     }
@@ -295,6 +314,11 @@ export default class CvForm extends React.Component {
             </div>
           </fieldset>
         </form>
+        <Snackbar
+          open={this.state.snackbar.open}
+          message={this.state.snackbar.message}
+          autoHideDuration={2000}
+        />
       </div>
     );
   }
