@@ -21,7 +21,7 @@ export default (props) => {
                 component={props.fieldRenderFn}
                 fullWidth={true}
                 hintText="Role in project (position)"
-                name={`cv.projects[${i}].position`}
+                name={`cv.projects[${i}].role`}
                 value={obj.role}
               />
             </div>

@@ -13,10 +13,10 @@ import AddIcon from 'material-ui/svg-icons/content/add';
 
 import './CvForm.less';
 
-const renderTextField = ({ input, label, meta: { touched, error }, ...custom }) => (
+const renderTextField = ({ input, label, meta: { active, touched, error }, ...custom }) => (
   <TextField hintText={label}
     floatingLabelText={label}
-    errorText={touched && error}
+    errorText={(active || touched) && error}
     {...input}
     {...custom}
   />
@@ -52,14 +52,14 @@ export default class CvForm extends React.Component {
     super(props);
     this.initialState = {
       cv: {
-        firstname: '',
-        lastname: '',
-        role: '',
         communication: '',
         education: '',
-        tools: [],
         experiences: [],
-        projects: []
+        firstname: '',
+        lastname: '',
+        projects: [],
+        role: '',
+        tools: []
       },
       toolsInput: ''
     };
@@ -67,7 +67,9 @@ export default class CvForm extends React.Component {
     const firstState = this.initialState;
     if (props.location.state &&
         props.location.state.cv) {
-      firstState.cv = props.location.state.cv;
+      const { createdAt, updatedAt, id, ...data } = props.location.state.cv;
+      this.cvId = id;
+      firstState.cv = data;
       this.submitBtnText = 'Update';
     }
     this.state = firstState;
@@ -75,18 +77,13 @@ export default class CvForm extends React.Component {
   }
   renderChip(data, i) {
     return (
-      <Field
-        name={`cv.tools[${i}]`}
+      <Chip
         key={data}
-        component={() => (
-          <Chip
-            onRequestDelete={() => this.removeTool(data)}
-            style={styles.chip}
-          >
-            {data}
-          </Chip>
-        )}
-      />
+        onRequestDelete={() => this.removeTool(data)}
+        style={styles.chip}
+      >
+        {data}
+      </Chip>
     );
   }
   changedTool(e, value) {
@@ -109,18 +106,19 @@ export default class CvForm extends React.Component {
     if (this.changedTool(null, e.target.value)) {
       return;
     }
-    let updatedCv = Object.assign({}, this.state.cv);
+    const updatedCv = Object.assign({}, this.state.cv);
     let tools = updatedCv.tools.slice();
     tools.push(e.target.value);
     updatedCv.tools = tools;
-    this.props.change(this.props.form, 'toolsInput', '');
+    this.props.change('toolsInput', '');
+    this.props.change('cv.tools', tools);
     this.setState({
       cv: updatedCv,
       toolsInput: this.initialState.toolsInput
     });
   }
   removeTool(key) {
-    let updatedCv = Object.assign({}, this.state.cv);
+    const updatedCv = Object.assign({}, this.state.cv);
     let tools = updatedCv.tools.slice();
     tools.splice(tools.indexOf(key), 1);
     updatedCv.tools = tools;
@@ -137,25 +135,6 @@ export default class CvForm extends React.Component {
     updatedCv.experiences = updatedCv.experiences.concat([newExperience]);
     this.setState({ cv: updatedCv });
   }
-  accessKeyByString(o, s, v) {
-    s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
-    s = s.replace(/^\./, '');           // strip a leading dot
-    const a = s.split('.');
-    for (let i = 0, n = a.length; i < n; ++i) {
-      const k = a[i];
-      if (k in o) {
-        if (i === n - 1 &&
-            v !== null &&
-            v !== undefined) {
-          o[k] = v;
-        }
-        o = o[k];
-      } else {
-        return;
-      }
-    }
-    return o;
-  }
   addProject() {
     const newProject = {
       description: '',
@@ -166,17 +145,12 @@ export default class CvForm extends React.Component {
     updatedCv.projects = updatedCv.projects.concat([newProject]);
     this.setState({ cv: updatedCv });
   }
-  handleChange(e, newValue) {
-    // const target = e.target;
-    // let updatedCv = Object.assign({}, this.state.cv);
-    // this.accessKeyByString(updatedCv, target.name, newValue);
-    // this.setState({ cv: updatedCv });
-    // console.log(target.name)
-  }
   submit(values) {
-    // not implemented yet
-    console.log(this.state.cv);
-    return false;
+    if (this.cvId) {
+      this.props.updateCv(this.cvId, values);
+    } else {
+      this.props.createCv(values.cv);
+    }
   }
   render() {
     const { handleSubmit, pristine, submitting } = this.props;
@@ -193,7 +167,6 @@ export default class CvForm extends React.Component {
                   id="firstname"
                   name="cv.firstname"
                   value={this.state.cv.firstname}
-                  onChange={this.handleChange.bind(this)}
                 />
               </div>
             </div>
@@ -206,7 +179,6 @@ export default class CvForm extends React.Component {
                   id="lastname"
                   name="cv.lastname"
                   value={this.state.cv.lastname}
-                  onChange={this.handleChange.bind(this)}
                 />
               </div>
             </div>
@@ -220,7 +192,6 @@ export default class CvForm extends React.Component {
                   id="role"
                   name="cv.role"
                   value={this.state.cv.role}
-                  onChange={this.handleChange.bind(this)}
                 />
               </div>
             </div>
@@ -236,7 +207,6 @@ export default class CvForm extends React.Component {
                   id="communication"
                   name="cv.communication"
                   value={this.state.cv.communication}
-                  onChange={this.handleChange.bind(this)}
                 />
               </div>
             </div>
@@ -268,9 +238,15 @@ export default class CvForm extends React.Component {
                   onChange={this.changedTool.bind(this)}
                   validate={this.validateTool.bind(this)}
                 />
-                <div style={styles.wrapper} >
-                  {this.state.cv.tools.map(this.renderChip, this)}
-                </div>
+                <Field
+                  name="cv.tools"
+                  value={this.state.cv.tools}
+                  component={() => (
+                    <div style={styles.wrapper} >
+                      {this.state.cv.tools.map(this.renderChip, this)}
+                    </div>
+                  )}
+                />
               </div>
             </div>
             <div className="form-group">
@@ -289,7 +265,6 @@ export default class CvForm extends React.Component {
                 class="col-sm-9"
                 fieldRenderFn={renderTextField}
                 data={this.state.cv.experiences}
-                onChange={this.handleChange.bind(this)}
               />
             </div>
             <div className="form-group">

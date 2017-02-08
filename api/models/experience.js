@@ -43,8 +43,7 @@ module.exports = (sequelize, DataTypes) => {
     company: {
       type: DataTypes.STRING,
       allowNull: false
-    },
-    description: DataTypes.STRING
+    }
   }, {
     freezeTableName: true,
     classMethods: {
