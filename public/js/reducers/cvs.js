@@ -1,12 +1,4 @@
-import {
-  CV_FETCH,
-  CV_RECEIVED,
-  CV_FAILURE,
-  CV_ADD,
-  CV_SHOW,
-  CV_SEARCH,
-  CV_SEARCH_RESET
-} from '../actions';
+import { ACTION_TYPES } from '../actions';
 
 const initialState = {
   items: [],
@@ -20,33 +12,36 @@ const initialState = {
 
 const cvs = (state = initialState, action) => {
   switch (action.type) {
-    case CV_ADD:
+    case ACTION_TYPES.CV_ADD_SUCCESS:
       return {
         ...state,
-        items: [...state.items, ...action.data ]
+        isFetching: false,
+        items: [ ...state.items, action.data ]
       };
-    case CV_SEARCH:
+    case ACTION_TYPES.CV_SEARCH:
       return {
         ...state,
         filter: action.filter
       };
-    case CV_SEARCH_RESET:
+    case ACTION_TYPES.CV_SEARCH_RESET:
       return {
         ...state,
         filter: initialState.filter
       };
-    case CV_FETCH:
+    case ACTION_TYPES.CV_ADD:
+    case ACTION_TYPES.CV_FETCH:
       return {
         ...state,
         isFetching: true
       };
-    case CV_RECEIVED:
+    case ACTION_TYPES.CV_FETCH_SUCCESS:
       return {
         ...state,
         isFetching: false,
         items: [...action.data]
       };
-    case CV_FAILURE:
+    case ACTION_TYPES.CV_ADD_FAILURE:
+    case ACTION_TYPES.CV_FETCH_FAILURE:
       return {
         ...state,
         isFetching: false,
