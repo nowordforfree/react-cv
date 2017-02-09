@@ -140,12 +140,14 @@ export const fetchCvs = (id) => dispatch => {
         type: ACTION_TYPES.CV_FETCH_SUCCESS,
         data: res.data
       });
+      return res;
     })
     .catch(err => {
       dispatch({
         type: ACTION_TYPES.CV_FETCH_FAILURE,
         error: (err.error || err.message)
       });
+      return err;
     });
 };
 
@@ -172,12 +174,14 @@ export const createCv = (data) => dispatch => {
         data: res.data
       });
     }
+    return res;
   })
   .catch(err => {
     dispatch({
       type: ACTION_TYPES.CV_ADD_FAILURE,
       error: (err.error || err.message)
-    })
+    });
+    return err;
   });
 };
 
@@ -204,12 +208,14 @@ export const updateCv = (cvId, data) => dispatch => {
         data: res.data
       });
     }
+    return res;
   })
   .catch(err => {
     dispatch({
       type: ACTION_TYPES.CV_ADD_FAILURE,
       error: (err.error || err.message)
-    })
+    });
+    return err;
   });
 };
 

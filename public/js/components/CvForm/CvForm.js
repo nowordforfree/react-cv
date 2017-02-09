@@ -72,6 +72,9 @@ export default class CvForm extends React.Component {
     if (props.location.state &&
         props.location.state.cv) {
       const { createdAt, updatedAt, id, ...data } = props.location.state.cv;
+      if (props.location.state.snackbar) {
+        Object.assign(firstState, props.location.state.snackbar);
+      }
       this.cvId = id;
       firstState.cv = data;
       this.submitBtnText = 'Update';
@@ -169,7 +172,28 @@ export default class CvForm extends React.Component {
         });
       });
     } else {
-      this.props.createCv(values.cv);
+      this.props.createCv(values.cv).then((cv) => {
+        if (cv.data) {
+          this.props.router.push({
+            pathname: `cv/${cv.data.id}`,
+            state: {
+              cv: cv.data,
+              snackbar: {
+                message: 'New CV created successfully',
+                open: true
+              }
+            }
+          });
+        }
+        if (cv.error) {
+          this.setState({
+            snackbar: {
+              message: cv.error,
+              open: true
+            }
+          });
+        }
+      });
     }
   }
   render() {

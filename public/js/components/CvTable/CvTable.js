@@ -8,7 +8,6 @@ import {
   TableRowColumn,
   TextField
 } from 'material-ui';
-import CvTableRow from '../CvTableRow';
 
 class CvList extends React.Component {
   componentDidMount() {
@@ -25,8 +24,10 @@ class CvList extends React.Component {
           onChange={this.filterStore.bind(this)}
         />
         <br />
-        <Table selectable={false} fixedHeader={true} >
-          <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
+        <Table fixedHeader={true} multiSelectable={true}>
+          <TableHeader
+            displaySelectAll={false}
+            adjustForCheckbox={true}>
             <TableRow>
               <TableHeaderColumn>ID</TableHeaderColumn>
               <TableHeaderColumn>First Name</TableHeaderColumn>
@@ -34,24 +35,35 @@ class CvList extends React.Component {
               <TableHeaderColumn>Role</TableHeaderColumn>
             </TableRow>
           </TableHeader>
-          <TableBody displayRowCheckbox={false}>
+          <TableBody
+            displayRowCheckbox={true}
+            deselectOnClickaway={false}
+            showRowHover={false}
+            stripedRows={false}
+          >
             {
               this.props.cvs.length ?
-                this.props.cvs.map(cv =>
-                  <CvTableRow
-                    key={ cv.id }
-                    data={ cv }
-                    onClick={() => this.context.router.push({
+                this.props.cvs.map((cv) =>
+                  <TableRow
+                    key={cv.id}
+                    hoverable={true}
+                    onRowClick={() => this.context.router.push({
                       pathname: `cv/${cv.id}`,
                       state: { cv: cv }
                     }) }
-                  />
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <TableRowColumn>{cv.id}</TableRowColumn>
+                    <TableRowColumn>{cv.firstname}</TableRowColumn>
+                    <TableRowColumn>{cv.lastname}</TableRowColumn>
+                    <TableRowColumn>{cv.role}</TableRowColumn>
+                  </TableRow>
                 ) :
-                <TableRow>
-                  <TableRowColumn colSpan={4} style={{textAlign: 'center'}}>
-                    No items found
-                  </TableRowColumn>
-                </TableRow>
+                  <TableRow>
+                    <TableRowColumn colSpan={4} style={{textAlign: 'center'}}>
+                      No items found
+                    </TableRowColumn>
+                  </TableRow>
             }
           </TableBody>
         </Table>
