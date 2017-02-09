@@ -118,6 +118,7 @@ export default class CvForm extends React.Component {
     this.props.change('cv.tools', tools);
     this.setState({
       cv: updatedCv,
+      snackbar: this.initialState.snackbar,
       toolsInput: this.initialState.toolsInput
     });
   }

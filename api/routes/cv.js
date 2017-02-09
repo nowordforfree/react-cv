@@ -82,14 +82,35 @@ router.put('/:id', (req, res) => {
         .transaction((t) => {
           return cv.update(req.body, {
             transaction: t
-          });
+          })
+          .then((cv) => {
+            let promises = [];
+            if (req.body.projects) {
+              req.body.projects.forEach(project => {
+                if (!project.CvId) {
+                  Object.assign(project, { CvId: cv.get('id') });
+                }
+                promises.push(db.Project.upsert(project, {
+                  transaction: t
+                }));
+              });
+            }
+            if (req.body.experiences) {
+              req.body.experiences.forEach(experience => {
+                if (!experience.CvId) {
+                  Object.assign(experience, { CvId: cv.get('id') });
+                }
+                promises.push(db.Experience.upsert(experience, {
+                  transaction: t
+                }));
+              })
+            }
+            return Promise.all(promises);
+          })
+          .then(() => cv);
         })
-        .then((arg) => {
-          res.json({ data: arg });
-        })
-        .catch((err) => {
-          res.json({ error: err });
-        });
+        .then(cv => res.json({ data: cv }))
+        .catch(err => res.status(500).json({ error: err }));
     })
 });
 

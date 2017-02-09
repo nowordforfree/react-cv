@@ -24,18 +24,18 @@ const validate = values => {
             if (!errors.cv.experiences[i]) {
               errors.cv.experiences[i] = {};
             }
-            errors.cv.experiences[i] = [
-              ...errors.cv.experiences[i],
+            errors.cv.experiences[i] = Object.assign(
+              errors.cv.experiences[i],
               { [field]: 'This field is required' }
-            ];
+            );
           }
         });
         if (obj.since && obj.till &&
-          (obj.since > obj.till)) {
-          errors.cv.experiences[i] = [
-            ...errors.cv.experiences[i],
+           (obj.since > obj.till)) {
+          errors.cv.experiences[i] = Object.assign(
+            errors.cv.experiences[i],
             { since: '"Since" should be less then "Till"' }
-          ];
+          );
         }
       });
     }
@@ -50,10 +50,10 @@ const validate = values => {
             if (!errors.cv.projects[i]) {
               errors.cv.projects[i] = {};
             }
-            errors.cv.projects[i] = [
-              ...errors.cv.projects[i],
+            errors.cv.projects[i] = Object.assign(
+              errors.cv.projects[i],
               { [field]: 'This field is required' }
-            ];
+            );
           }
         });
       });
