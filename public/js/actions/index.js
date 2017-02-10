@@ -5,6 +5,9 @@ export const ACTION_TYPES = {
   CV_UPDATE: 'CV_UPDATE',
   CV_UPDATE_SUCCESS: 'CV_UPDATE_SUCCESS',
   CV_UPDATE_FAILURE: 'CV_UPDATE_FAILURE',
+  CV_DELETE: 'CV_DELETE',
+  CV_DELETE_SUCCESS: 'CV_DELETE_SUCCESS',
+  CV_DELETE_FAILURE: 'CV_DELETE_FAILURE',
   CV_SHOW: 'CV_SHOW',
   CV_SEARCH: 'CV_SEARCH',
   CV_SEARCH_RESET: 'CV_SEARCH_RESET',
@@ -103,8 +106,10 @@ export const logout = () => dispatch => {
 };
 
 export const updateProfile = (userId, data) => dispatch => {
+  if (!userId) {
+    throw new Error('userId parameter is required');
+  }
   dispatch({ type: ACTION_TYPES.PROFILE_UPDATE_REQUEST });
-
   return fetch(`${API_URL}/user/${userId}`, {
     method: 'put',
     headers: {
@@ -186,8 +191,10 @@ export const createCv = (data) => dispatch => {
 };
 
 export const updateCv = (cvId, data) => dispatch => {
-  dispatch({ type: ACTION_TYPES.CV_ADD });
-
+  if (!cvId) {
+    throw new Error('id parameter is required');
+  }
+  dispatch({ type: ACTION_TYPES.CV_UPDATE });
   return fetch(`${API_URL}/cv/${cvId}`, {
     method: 'put',
     headers: {
@@ -199,12 +206,12 @@ export const updateCv = (cvId, data) => dispatch => {
   .then(res => {
     if (res.error) {
       dispatch({
-        type: ACTION_TYPES.CV_ADD_FAILURE,
+        type: ACTION_TYPES.CV_UPDATE_FAILURE,
         error: res.error
       });
     } else {
       dispatch({
-        type: ACTION_TYPES.CV_ADD_SUCCESS,
+        type: ACTION_TYPES.CV_UPDATE_SUCCESS,
         data: res.data
       });
     }
@@ -212,11 +219,44 @@ export const updateCv = (cvId, data) => dispatch => {
   })
   .catch(err => {
     dispatch({
-      type: ACTION_TYPES.CV_ADD_FAILURE,
+      type: ACTION_TYPES.CV_UPDATE_FAILURE,
       error: (err.error || err.message)
     });
     return err;
   });
+};
+
+export const deleteCvs = (ids) => dispatch => {
+  if (!ids || !ids.length) {
+    throw new Error('id(s) parameter is required');
+  }
+  dispatch({ type: ACTION_TYPES.CV_DELETE });
+  let url = `${API_URL}/cv`;
+  let options = { method: 'delete' };
+  if (ids instanceof Array) {
+    Object.assign(options, {
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(ids)
+    });
+  } else {
+    url += `/${ids}`;
+  }
+  return fetch(url, options)
+    .then(res => res.json())
+    .then(res => {
+      dispatch({
+        type: ACTION_TYPES.CV_DELETE_SUCCESS,
+        data: ids
+      });
+      return res;
+    })
+    .catch(err => {
+      dispatch({
+        type: ACTION_TYPES.CV_DELETE_FAILURE,
+        error: (err.error || err.message)
+      });
+      return err;
+    });
 };
 
 export const setVisibilityFilter = (filter) => dispatch => {

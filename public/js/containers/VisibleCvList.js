@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { fetchCvs, setVisibilityFilter } from '../actions';
+import { fetchCvs, deleteCvs, setVisibilityFilter } from '../actions';
 import CvTable from '../components/CvTable';
 
 const getVisibleCvList = (cvs, filter) => {
@@ -44,8 +44,9 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-  fetchCvs: fetchCvs,
-  setFilter: setVisibilityFilter
+  setFilter: setVisibilityFilter,
+  fetchCvs,
+  deleteCvs
 };
 
 export default connect(

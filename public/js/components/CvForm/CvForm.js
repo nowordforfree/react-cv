@@ -65,9 +65,9 @@ export default class CvForm extends React.Component {
         message: '',
         open: false
       },
+      submitBtnText: 'Create',
       toolsInput: ''
     };
-    this.submitBtnText = 'Create';
     const firstState = this.initialState;
     if (props.location.state &&
         props.location.state.cv) {
@@ -77,7 +77,7 @@ export default class CvForm extends React.Component {
       }
       this.cvId = id;
       firstState.cv = data;
-      this.submitBtnText = 'Update';
+      firstState.submitBtnText = 'Update';
     }
     this.state = firstState;
     this.props.initialize(this.state);
@@ -86,9 +86,8 @@ export default class CvForm extends React.Component {
     return (
       <Chip
         key={data}
-        onRequestDelete={() => this.removeTool(data)}
-        style={styles.chip}
-      >
+        onRequestDelete={this.removeSub.bind(this, 'tools', i)}
+        style={styles.chip} >
         {data}
       </Chip>
     );
@@ -125,12 +124,13 @@ export default class CvForm extends React.Component {
       toolsInput: this.initialState.toolsInput
     });
   }
-  removeTool(key) {
+  removeSub(key, index) {
     const updatedCv = Object.assign({}, this.state.cv);
-    let tools = updatedCv.tools.slice();
-    tools.splice(tools.indexOf(key), 1);
-    updatedCv.tools = tools;
+    let subArray = updatedCv[key].slice();
+    subArray.splice(index, 1);
+    updatedCv[key] = subArray;
     this.setState({ cv: updatedCv });
+    this.props.change(`cv.${key}`, subArray);
   }
   addExperience() {
     const newExperience = {
@@ -155,13 +155,19 @@ export default class CvForm extends React.Component {
   }
   submit(values) {
     if (this.cvId) {
-      this.props.updateCv(this.cvId, values.cv).then(() => {
-        this.setState({
-          snackbar: {
-            open: true,
-            message: 'Changes saved successfully'
-          }
-        });
+      this.props.updateCv(this.cvId, values.cv).then((cv) => {
+        if (cv.data) {
+          this.props.router.replace({
+            pathname: `/cv/${cv.data.id}`,
+            state: { cv: cv.data }
+          });
+          this.setState({
+            snackbar: {
+              open: true,
+              message: 'Changes saved successfully'
+            }
+          });
+        }
       })
       .catch(err => {
         this.setState({
@@ -174,15 +180,18 @@ export default class CvForm extends React.Component {
     } else {
       this.props.createCv(values.cv).then((cv) => {
         if (cv.data) {
+          this.cvId = cv.data.id;
           this.props.router.push({
-            pathname: `cv/${cv.data.id}`,
-            state: {
-              cv: cv.data,
-              snackbar: {
-                message: 'New CV created successfully',
-                open: true
-              }
-            }
+            pathname: `/cv/${cv.data.id}`,
+            state: { cv: cv.data }
+          });
+          this.setState({
+            cv: cv.data,
+            snackbar: {
+              message: 'New CV created successfully',
+              open: true
+            },
+            submitBtnText: 'Update'
           });
         }
         if (cv.error) {
@@ -197,7 +206,12 @@ export default class CvForm extends React.Component {
     }
   }
   render() {
-    const { handleSubmit, pristine, submitting } = this.props;
+    const {
+      handleSubmit,
+      pristine,
+      reset,
+      submitting
+    } = this.props;
     return (
       <div className="container">
         <form className="form-horizontal" onSubmit={handleSubmit(this.submit.bind(this))}>
@@ -309,6 +323,7 @@ export default class CvForm extends React.Component {
                 class="col-sm-9"
                 fieldRenderFn={renderTextField}
                 data={this.state.cv.experiences}
+                deleteFn={this.removeSub.bind(this, 'experiences')}
               />
             </div>
             <div className="form-group">
@@ -327,14 +342,21 @@ export default class CvForm extends React.Component {
                 class="col-sm-9"
                 fieldRenderFn={renderTextField}
                 data={this.state.cv.projects}
+                deleteFn={this.removeSub.bind(this, 'projects')}
               />
             </div>
             <div className="form-group">
               <RaisedButton
                 disabled={pristine || submitting}
-                label={this.submitBtnText}
+                label={this.state.submitBtnText}
                 primary={true}
                 type="submit"
+              />
+              <RaisedButton
+                className={pristine ? 'hidden' : ''}
+                label="Reset"
+                onClick={reset}
+                style={{ marginLeft: 20 }}
               />
             </div>
           </fieldset>

@@ -3,7 +3,7 @@ import { IndexRoute, Route, Router } from 'react-router';
 
 import Error404 from './components/Error404';
 import Root from './components/Root';
-import Home from './components/Home';
+import Home from './containers/VisibleCvList';
 import Auth from './components/Auth';
 import Profile from './containers/ProfileForm';
 import CvForm from './containers/CvForm';

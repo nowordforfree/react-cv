@@ -42,7 +42,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.post('/', (req, res, next) => {
+router.post('/', (req, res) => {
   db
     .sequelize
     .transaction((t) => {
@@ -114,12 +114,15 @@ router.put('/:id', (req, res) => {
     })
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id?', (req, res) => {
+  if (!req.params.id && !req.body.length) {
+    return res.status(400).json({ error: 'CV id(s) are required for DELETE' });
+  }
   db
     .Cv
     .destroy({
       where: {
-        id: req.params.id
+        id: (req.params.id || req.body)
       }
     })
     .then(arg => {
