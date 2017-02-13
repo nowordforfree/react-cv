@@ -40,7 +40,7 @@ module.exports = {
 		new webpack.DefinePlugin({
 			API_URL: JSON.stringify(`http://${config.api.host}:${config.api.port}/api`),
 			'process.env': {
-				'NODE_ENV': JSON.stringify('development')
+				'NODE_ENV': (process.env && JSON.stringify(process.env.NODE_ENV)) || JSON.stringify('development')
 			}
 		}),
 		new webpack.optimize.DedupePlugin(),
