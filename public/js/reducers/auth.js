@@ -18,9 +18,7 @@ const auth = (state = initialState, action) => {
         error: null
       };
     case ACTION_TYPES.LOGIN_SUCCESS:
-      localStorage.setItem('token', action.data.token);
     case ACTION_TYPES.PROFILE_UPDATE_SUCCESS:
-      localStorage.setItem('user', JSON.stringify(action.data.user || action.data));
       return {
         ...state,
         user: action.data.user,
@@ -42,8 +40,6 @@ const auth = (state = initialState, action) => {
         error: action.error
       };
     case ACTION_TYPES.LOGOUT_SUCCESS:
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
       return initialState;
     default:
       return state;

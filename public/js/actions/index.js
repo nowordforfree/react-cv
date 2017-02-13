@@ -43,6 +43,8 @@ export const login = (data) => dispatch => {
           error: res.error
         });
       } else {
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('user', JSON.stringify(res.data.user));
         dispatch({
           type: ACTION_TYPES.LOGIN_SUCCESS,
           data: res.data
@@ -93,6 +95,8 @@ export const logout = () => dispatch => {
       method: 'post'
     })
     .then((res) => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
       dispatch({
         type: ACTION_TYPES.LOGOUT_SUCCESS
       });
@@ -119,6 +123,7 @@ export const updateProfile = (userId, data) => dispatch => {
   })
   .then(res => res.json())
   .then(res => {
+    localStorage.setItem('user', JSON.stringify(res.data));
     dispatch({
       type: ACTION_TYPES.PROFILE_UPDATE_SUCCESS,
       data: res.data

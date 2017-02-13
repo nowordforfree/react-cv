@@ -8,7 +8,11 @@ const getPreloadedAuthState = () => {
   let token = localStorage.getItem('token');
   let user = localStorage.getItem('user');
   if (user) {
+    try {
       user = JSON.parse(user);
+    } catch (err) {
+      user = null;
+    }
   }
   return {
     auth: {
