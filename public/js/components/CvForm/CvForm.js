@@ -86,6 +86,7 @@ export default class CvForm extends React.Component {
     return (
       <Chip
         key={data}
+        className="chip"
         onRequestDelete={this.removeSub.bind(this, 'tools', i)}
         style={styles.chip} >
         {data}
@@ -287,6 +288,7 @@ export default class CvForm extends React.Component {
               <div className="col-sm-9">
                 <Field
                   component={renderTextField}
+                  className="hidden-print"
                   fullWidth={true}
                   hintText='Press "Enter" to add new record'
                   id="tools"
@@ -312,6 +314,7 @@ export default class CvForm extends React.Component {
                 Experience
                 <IconButton
                   tooltip="Add Experience"
+                  className="hidden-print"
                   iconStyle={styles.block.iconStyle}
                   style={styles.block.iconButton}
                   onClick={this.addExperience.bind(this)}
@@ -320,7 +323,7 @@ export default class CvForm extends React.Component {
                 </IconButton>
               </label>
               <BlockExperience
-                class="col-sm-9"
+                class="col-sm-9 block align-right-sm"
                 fieldRenderFn={renderTextField}
                 data={this.state.cv.experiences}
                 deleteFn={this.removeSub.bind(this, 'experiences')}
@@ -331,6 +334,7 @@ export default class CvForm extends React.Component {
                 Projects
                 <IconButton
                   tooltip="Add Project"
+                  className="hidden-print"
                   iconStyle={styles.block.iconStyle}
                   style={styles.block.iconButton}
                   onClick={this.addProject.bind(this)}
@@ -339,7 +343,7 @@ export default class CvForm extends React.Component {
                 </IconButton>
               </label>
               <BlockProjects
-                class="col-sm-9"
+                class="col-sm-9 block align-right-sm"
                 fieldRenderFn={renderTextField}
                 data={this.state.cv.projects}
                 deleteFn={this.removeSub.bind(this, 'projects')}
@@ -347,12 +351,14 @@ export default class CvForm extends React.Component {
             </div>
             <div className="form-group">
               <RaisedButton
+                className="hidden-print"
                 disabled={pristine || submitting}
                 label={this.state.submitBtnText}
                 primary={true}
                 type="submit"
               />
               <RaisedButton
+                className="hidden-print"
                 className={pristine ? 'hidden' : ''}
                 label="Reset"
                 onClick={reset}

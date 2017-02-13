@@ -3,6 +3,9 @@
     font-weight: normal;
     padding-top: 15px;
   }
+  .align-right-sm {
+    text-align: right;
+  }
 }
 @media (max-width: 767px) {
   .form-horizontal {
@@ -10,9 +13,25 @@
       .control-label {
         font-weight: normal;
       }
-      input {
+      input, textarea {
         text-align: center;
       }
     }
+  }
+}
+@media print {
+  label {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  .chip svg {
+    display: none !important;
+  }
+}
+
+.form-group .control-label + .block > div {
+  margin-top: 15px;
+  &:first-child {
+    margin-top: 0;
   }
 }

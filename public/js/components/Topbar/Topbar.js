@@ -65,6 +65,7 @@ const Logged = (props) => {
 const Topbar = ({ signedIn, logout }) => (
   <AppBar
     title="CVs"
+    className="hidden-print"
     iconElementRight={
       signedIn ? <Logged logout={logout} /> : <Login />
     }

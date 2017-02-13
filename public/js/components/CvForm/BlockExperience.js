@@ -58,6 +58,7 @@ export default (props) => (
           </div>
         </div>
         <RaisedButton
+          className="hidden-print"
           label="Remove"
           style={{
             marginBottom: 15,
