@@ -70,6 +70,11 @@ const Topbar = ({ signedIn, logout }) => (
       signedIn ? <Logged logout={logout} /> : <Login />
     }
     showMenuIconButton={false}
+    style={{
+      position: 'fixed',
+      left: 0,
+      top: 0
+    }}
   />
 );
 
