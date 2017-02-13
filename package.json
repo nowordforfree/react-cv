@@ -11,7 +11,8 @@
   "license": "MIT",
   "repository": {
     "type": "GIT",
-    "url": "git@github.com:nowordforfree/react-cv.git"
+    "url": "git@github.com:nowordforfree/react-cv.git",
+    "description": "Application for creating and managing CVs built with ReactJS"
   },
   "dependencies": {
     "babel-core": "^6.22.1",
