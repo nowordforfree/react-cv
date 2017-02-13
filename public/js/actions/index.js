@@ -92,7 +92,10 @@ export const logout = () => dispatch => {
   dispatch({ type: ACTION_TYPES.LOGOUT_REQUEST });
 
   return fetch(`${API_URL}/auth/logout`, {
-      method: 'post'
+      method: 'post',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
     })
     .then((res) => {
       localStorage.removeItem('token');
@@ -117,6 +120,7 @@ export const updateProfile = (userId, data) => dispatch => {
   return fetch(`${API_URL}/user/${userId}`, {
     method: 'put',
     headers: {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(data)
@@ -143,22 +147,27 @@ export const fetchCvs = (id) => dispatch => {
   if (id) {
     url += '/' + id;
   }
-  return fetch(url)
-    .then(res => res.json())
-    .then(res => {
-      dispatch({
-        type: ACTION_TYPES.CV_FETCH_SUCCESS,
-        data: res.data
-      });
-      return res;
-    })
-    .catch(err => {
-      dispatch({
-        type: ACTION_TYPES.CV_FETCH_FAILURE,
-        error: (err.error || err.message)
-      });
-      return err;
+  return fetch(url, {
+    method: 'get',
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    }
+  })
+  .then(res => res.json())
+  .then(res => {
+    dispatch({
+      type: ACTION_TYPES.CV_FETCH_SUCCESS,
+      data: res.data
     });
+    return res;
+  })
+  .catch(err => {
+    dispatch({
+      type: ACTION_TYPES.CV_FETCH_FAILURE,
+      error: (err.error || err.message)
+    });
+    return err;
+  });
 };
 
 export const createCv = (data) => dispatch => {
@@ -167,6 +176,7 @@ export const createCv = (data) => dispatch => {
   return fetch(`${API_URL}/cv`, {
     method: 'post',
     headers: {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(data)
@@ -203,6 +213,7 @@ export const updateCv = (cvId, data) => dispatch => {
   return fetch(`${API_URL}/cv/${cvId}`, {
     method: 'put',
     headers: {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(data)
@@ -237,12 +248,15 @@ export const deleteCvs = (ids) => dispatch => {
   }
   dispatch({ type: ACTION_TYPES.CV_DELETE });
   let url = `${API_URL}/cv`;
-  let options = { method: 'delete' };
+  let options = {
+    method: 'delete',
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    }
+  };
   if (ids instanceof Array) {
-    Object.assign(options, {
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(ids)
-    });
+    options.headers['Content-Type'] = 'application/json';
+    options.body = JSON.stringify(ids);
   } else {
     url += `/${ids}`;
   }
