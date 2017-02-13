@@ -48,9 +48,8 @@ const styles = {
 };
 
 export default class CvForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.initialState = {
+  get initialState() {
+    return {
       cv: {
         communication: '',
         education: '',
@@ -68,11 +67,17 @@ export default class CvForm extends React.Component {
       submitBtnText: 'Create',
       toolsInput: ''
     };
+  }
+  constructor(props) {
+    super(props);
+    this.resetState();
+  }
+  resetState() {
     const firstState = this.initialState;
-    if (props.location.state &&
-        props.location.state.cv) {
-      const { createdAt, updatedAt, id, ...data } = props.location.state.cv;
-      if (props.location.state.snackbar) {
+    if (this.props.location.state &&
+        this.props.location.state.cv) {
+      const { createdAt, updatedAt, id, ...data } = this.props.location.state.cv;
+      if (this.props.location.state.snackbar) {
         Object.assign(firstState, props.location.state.snackbar);
       }
       this.cvId = id;
@@ -81,6 +86,10 @@ export default class CvForm extends React.Component {
     }
     this.state = firstState;
     this.props.initialize(this.state);
+  }
+  resetForm(resetFormFn) {
+    resetFormFn();
+    this.resetState();
   }
   renderChip(data, i) {
     return (
@@ -361,7 +370,7 @@ export default class CvForm extends React.Component {
                 className="hidden-print"
                 className={pristine ? 'hidden' : ''}
                 label="Reset"
-                onClick={reset}
+                onClick={this.resetForm.bind(this, reset)}
                 style={{ marginLeft: 20 }}
               />
             </div>
