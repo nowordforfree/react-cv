@@ -1,4 +1,9 @@
-import Component from './Spinner';
+import React from 'react';
+
 import './Spinner.less';
 
-export default Component;
+export default () => (
+  <div className="spin-backdrop">
+    <img className="spinner" src="/img/logo.svg"/>
+  </div>
+);
