@@ -33,9 +33,9 @@ router.post('/login', (req, res, next) => {
       }
       if (user.comparePassword(req.body.password)) {
         jwt.sign({
-          user: user.get()
+          user: user.get('id')
         }, 'CvsPrivateKey', {
-          expiresIn: '30m'
+          expiresIn: '8h'
         }, (err, token) => {
           if (err) {
             res.status(500).json({

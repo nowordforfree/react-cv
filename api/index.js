@@ -29,13 +29,12 @@ module.exports = () => {
     res.set({
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
-      'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+      'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
     });
     next();
   });
-  // Also "multer" package is used in POST /user route
-  // for handling multipart/form-data requests
-  app.post('/api/*', upload.array());
+  // "multer" package used for handling multipart/form-data requests
+  app.post('/api', upload.array());
 
   app.use('/api', routes);
 

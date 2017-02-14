@@ -25,6 +25,8 @@ export const ACTION_TYPES = {
   CV_FETCH_FAILURE: 'CV_FETCH_FAILURE'
 }
 
+const registrationToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY3Rpb24iOiJyZWdpc3RlciIsImlhdCI6MTQ4NzAwMjg2NiwiZXhwIjoxODkzNDU2MDAwfQ.RIRwNtF4n1wJnvsmZ7nkPwtAnnXuX15wTmAOY69o2Fo';
+
 export const login = (data) => dispatch => {
   dispatch({ type: ACTION_TYPES.LOGIN_REQUEST });
 
@@ -65,7 +67,8 @@ export const register = (data) => dispatch => {
   return fetch(`${API_URL}/user`, {
       method: 'post',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${registrationToken}`
       },
       body: JSON.stringify(data)
     })
@@ -155,10 +158,17 @@ export const fetchCvs = (id) => dispatch => {
   })
   .then(res => res.json())
   .then(res => {
-    dispatch({
-      type: ACTION_TYPES.CV_FETCH_SUCCESS,
-      data: res.data
-    });
+    if (res.error) {
+      dispatch({
+        type: ACTION_TYPES.CV_FETCH_FAILURE,
+        error: res.error
+      });
+    } else {
+      dispatch({
+        type: ACTION_TYPES.CV_FETCH_SUCCESS,
+        data: res.data
+      });
+    }
     return res;
   })
   .catch(err => {
