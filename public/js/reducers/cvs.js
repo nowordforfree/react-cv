@@ -68,6 +68,11 @@ const cvs = (state = initialState, action) => {
         ...state,
         isFetching: false,
         error: action.error
+      };
+    case ACTION_TYPES.SESSION_EXPIRED:
+      return {
+        ...state,
+        isFetching: false
       }
     default:
       return state;

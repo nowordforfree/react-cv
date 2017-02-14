@@ -41,6 +41,13 @@ const auth = (state = initialState, action) => {
       };
     case ACTION_TYPES.LOGOUT_SUCCESS:
       return initialState;
+    case ACTION_TYPES.SESSION_EXPIRED:
+      return {
+        ...state,
+        signedIn: false,
+        isFetching: false,
+        error: action.error
+      }
     default:
       return state;
   }

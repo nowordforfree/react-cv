@@ -28,6 +28,20 @@ export const ACTION_TYPES = {
 
 const registrationToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY3Rpb24iOiJyZWdpc3RlciIsImlhdCI6MTQ4NzAwMjg2NiwiZXhwIjoxODkzNDU2MDAwfQ.RIRwNtF4n1wJnvsmZ7nkPwtAnnXuX15wTmAOY69o2Fo';
 
+const handleError = (dispatch, responseError, dispatchType) => {
+  if (responseError === 'Session expired') {
+    dispatch({
+      type: ACTION_TYPES.SESSION_EXPIRED,
+      error: responseError
+    });
+  } else {
+    dispatch({
+      type: dispatchType,
+      error: responseError
+    });
+  }
+};
+
 export const login = (data) => dispatch => {
   dispatch({ type: ACTION_TYPES.LOGIN_REQUEST });
 
@@ -41,10 +55,7 @@ export const login = (data) => dispatch => {
     .then(res => res.json())
     .then(res => {
       if (res.error) {
-        dispatch({
-          type: ACTION_TYPES.LOGIN_FAILURE,
-          error: res.error
-        });
+        handleError(dispatch, res.error, ACTION_TYPES.LOGIN_FAILURE);
       } else {
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('user', JSON.stringify(res.data.user));
@@ -76,10 +87,7 @@ export const register = (data) => dispatch => {
     .then(res => res.json())
     .then(res => {
       if (res.error) {
-        dispatch({
-          type: ACTION_TYPES.LOGIN_FAILURE,
-          error: res.error
-        });
+        handleError(dispatch, res.error, ACTION_TYPES.LOGIN_FAILURE);
       } else {
         login(data)(dispatch);
       }
@@ -104,9 +112,7 @@ export const logout = () => dispatch => {
     .then((res) => {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      dispatch({
-        type: ACTION_TYPES.LOGOUT_SUCCESS
-      });
+      dispatch({ type: ACTION_TYPES.LOGOUT_SUCCESS });
     })
     .catch((err) => {
       dispatch({
@@ -131,11 +137,15 @@ export const updateProfile = (userId, data) => dispatch => {
   })
   .then(res => res.json())
   .then(res => {
-    localStorage.setItem('user', JSON.stringify(res.data));
-    dispatch({
-      type: ACTION_TYPES.PROFILE_UPDATE_SUCCESS,
-      data: res.data
-    });
+    if (res.error) {
+      handleError(dispatch, res.error, ACTION_TYPES.PROFILE_UPDATE_FAILURE);
+    } else {
+      localStorage.setItem('user', JSON.stringify(res.data));
+      dispatch({
+        type: ACTION_TYPES.PROFILE_UPDATE_SUCCESS,
+        data: res.data
+      });
+    }
   })
   .catch(err => {
     dispatch({
@@ -160,10 +170,7 @@ export const fetchCvs = (id) => dispatch => {
   .then(res => res.json())
   .then(res => {
     if (res.error) {
-      dispatch({
-        type: ACTION_TYPES.CV_FETCH_FAILURE,
-        error: res.error
-      });
+      handleError(dispatch, res.error, ACTION_TYPES.CV_FETCH_FAILURE);
     } else {
       dispatch({
         type: ACTION_TYPES.CV_FETCH_SUCCESS,
@@ -195,10 +202,7 @@ export const createCv = (data) => dispatch => {
   .then(res => res.json())
   .then(res => {
     if (res.error) {
-      dispatch({
-        type: ACTION_TYPES.CV_ADD_FAILURE,
-        error: res.error
-      });
+      handleError(dispatch, res.error, CV_ADD_FAILURE);
     } else {
       dispatch({
         type: ACTION_TYPES.CV_ADD_SUCCESS,
@@ -232,10 +236,7 @@ export const updateCv = (cvId, data) => dispatch => {
   .then(res => res.json())
   .then(res => {
     if (res.error) {
-      dispatch({
-        type: ACTION_TYPES.CV_UPDATE_FAILURE,
-        error: res.error
-      });
+      handleError(dispatch, res.error, ACTION_TYPES.CV_UPDATE_FAILURE);
     } else {
       dispatch({
         type: ACTION_TYPES.CV_UPDATE_SUCCESS,
@@ -274,10 +275,14 @@ export const deleteCvs = (ids) => dispatch => {
   return fetch(url, options)
     .then(res => res.json())
     .then(res => {
-      dispatch({
-        type: ACTION_TYPES.CV_DELETE_SUCCESS,
-        data: ids
-      });
+      if (res.error) {
+        handleError(dispatch, res.error, ACTION_TYPES.CV_DELETE_FAILURE);
+      } else {
+        dispatch({
+          type: ACTION_TYPES.CV_DELETE_SUCCESS,
+          data: ids
+        });
+      }
       return res;
     })
     .catch(err => {
