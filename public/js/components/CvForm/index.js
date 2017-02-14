@@ -78,10 +78,6 @@ export default class CvForm extends React.Component {
     this.state = firstState;
     this.props.initialize(this.state);
   }
-  resetForm(resetFormFn) {
-    resetFormFn();
-    this.resetState();
-  }
   renderChip(data, i) {
     return (
       <Chip
@@ -210,7 +206,6 @@ export default class CvForm extends React.Component {
     const {
       handleSubmit,
       pristine,
-      reset,
       submitting
     } = this.props;
     return (
@@ -361,7 +356,7 @@ export default class CvForm extends React.Component {
                 className="hidden-print"
                 className={pristine ? 'hidden' : ''}
                 label="Reset"
-                onClick={this.resetForm.bind(this, reset)}
+                onClick={this.resetState.bind(this)}
                 style={{ marginLeft: 20 }}
               />
             </div>
