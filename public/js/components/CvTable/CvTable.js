@@ -112,10 +112,9 @@ class CvList extends React.Component {
           </div>
         </div>
         <Table
-          fixedHeader={true}
-          height={'500px'}
+          height={this.props.cvs.length > 10 ? '500px' : 'auto'}
           multiSelectable={true}
-          onCellClick={this.updateSelected()} >
+          onCellClick={this.props.cvs.length ? this.updateSelected() : undefined} >
           <TableHeader
             displaySelectAll={false}
             adjustForCheckbox={true} >
@@ -127,7 +126,7 @@ class CvList extends React.Component {
             </TableRow>
           </TableHeader>
           <TableBody
-            displayRowCheckbox={true}
+            displayRowCheckbox={this.props.cvs.length > 0}
             deselectOnClickaway={false}
             showRowHover={false}
             stripedRows={false} >
