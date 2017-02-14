@@ -1,17 +1,8 @@
 import React from 'react';
 import { Field } from 'redux-form';
-import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
-
-const renderTextField = ({ input, label, meta: { touched, error }, ...custom }) => (
-  <TextField hintText={label}
-    floatingLabelText={label}
-    errorText={touched && error}
-    {...input}
-    {...custom}
-  />
-)
+import { renderTextField } from '../../helpers';
 
 export default class Profile extends React.Component {
   constructor(props) {

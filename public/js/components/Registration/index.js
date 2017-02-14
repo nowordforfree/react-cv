@@ -1,19 +1,10 @@
 import React from 'react';
 import { Field } from 'redux-form';
-import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-
-const renderField = ({ input, label, meta: { touched, error }, ...custom }) => (
-  <TextField hintText={label}
-    floatingLabelText={label}
-    errorText={touched && error}
-    {...input}
-    {...custom}
-  />
-)
+import { renderTextField } from '../../helpers';
 
 export default (props) => {
-  const { handleSubmit, pristine, reset, submitting } = props;
+  const { handleSubmit, pristine, submitting } = props;
   const submit = values => {
     let { email, password } = values;
     props.register({ email, password });
@@ -27,7 +18,7 @@ export default (props) => {
             type="email"
             label="Email"
             fullWidth={true}
-            component={renderField}
+            component={renderTextField}
           />
         </div>
         <div className="form-group">
@@ -36,7 +27,7 @@ export default (props) => {
             type="password"
             label="Password"
             fullWidth={true}
-            component={renderField}
+            component={renderTextField}
           />
         </div>
         <div className="form-group">
@@ -45,7 +36,7 @@ export default (props) => {
             type="password"
             label="Confirm Password"
             fullWidth={true}
-            component={renderField}
+            component={renderTextField}
           />
         </div>
         <div className={"form-group" +
@@ -66,4 +57,4 @@ export default (props) => {
       </fieldset>
     </form>
   );
-}
+};

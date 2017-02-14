@@ -4,23 +4,14 @@ import {
   Chip,
   IconButton,
   RaisedButton,
-  Snackbar,
-  TextField
+  Snackbar
  } from 'material-ui';
 import BlockExperience from './BlockExperience';
 import BlockProjects from './BlockProjects';
 import AddIcon from 'material-ui/svg-icons/content/add';
+import { renderTextField } from '../../helpers';
 
 import './CvForm.less';
-
-const renderTextField = ({ input, label, meta: { active, touched, error }, ...custom }) => (
-  <TextField hintText={label}
-    floatingLabelText={label}
-    errorText={(active || touched) && error}
-    {...input}
-    {...custom}
-  />
-)
 
 const styles = {
   block: {
