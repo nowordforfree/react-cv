@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link, withRouter } from 'react-router';
 import {
   Dialog,
   RaisedButton,
@@ -47,7 +47,7 @@ class CvList extends React.Component {
         }
       } else {
         const cv = ctx.props.cvs[rowIndex];
-        ctx.context.router.push({
+        ctx.props.router.push({
           pathname: `cv/${cv.id}`,
           state: { cv: cv }
         });
@@ -164,8 +164,4 @@ class CvList extends React.Component {
   }
 }
 
-CvList.contextTypes = {
-  router: React.PropTypes.object.isRequired
-};
-
-export default CvList;
+export default withRouter(CvList);
