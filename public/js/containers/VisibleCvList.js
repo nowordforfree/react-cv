@@ -7,41 +7,37 @@ const getVisibleCvList = (cvs, filter) => {
     case 'SHOW_ALL':
       return cvs;
     case 'FUZZY':
-      return cvs.filter(cv => {
+      return cvs.filter((cv) => {
         const searchRe = new RegExp(filter.text, 'i');
-        return Object.keys(cv).some(key => {
+        return Object.keys(cv).some((key) => {
           if (cv[key] instanceof Array) {
-            return Object.keys(cv[key]).some(subKey => {
-              return searchRe.test(cv[key][subKey]);
-            });
-          } else {
-            return searchRe.test(cv[key]);
+            return Object.keys(cv[key]).some(subKey =>
+              searchRe.test(cv[key][subKey])
+            );
           }
+          return searchRe.test(cv[key]);
         });
       });
     case 'STRICT':
-      return cvs.filter(cv => {
+      return cvs.filter((cv) => {
         const searchRe = new RegExp(filter.text);
-        return Object.keys(cv).some(key => {
+        return Object.keys(cv).some((key) => {
           if (cv[key] instanceof Array) {
-            return Object.keys(cv[key]).some(subKey => {
-              return searchRe.test(cv[key][subKey]);
-            });
-          } else {
-            return searchRe.test(cv[key]);
+            return Object.keys(cv[key]).some(subKey =>
+              searchRe.test(cv[key][subKey])
+            );
           }
+          return searchRe.test(cv[key]);
         });
       });
     default:
-      throw new Error('Unknown filter: ' + filter);
+      throw new Error(`Unknown filter: ${filter}`);
   }
 };
 
-const mapStateToProps = (state) => {
-  return {
-    cvs: getVisibleCvList(state.cvs.items, state.cvs.filter)
-  };
-};
+const mapStateToProps = state => ({
+  cvs: getVisibleCvList(state.cvs.items, state.cvs.filter)
+});
 
 const mapDispatchToProps = {
   setFilter: setVisibilityFilter,

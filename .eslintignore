@@ -1,0 +1,7 @@
+# http://eslint.org/docs/user-guide/configuring#ignoring-files-and-directories
+# node_modules ignored by default
+volumes
+**/bundle.js
+/config.js
+/index.js
+webpack.config.js

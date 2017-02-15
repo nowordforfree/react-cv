@@ -1,15 +1,15 @@
 import React from 'react';
-import { Field, change, stopSubmit } from 'redux-form';
+import { Field } from 'redux-form';
 import {
   Chip,
   IconButton,
   RaisedButton,
   Snackbar
  } from 'material-ui';
+import AddIcon from 'material-ui/svg-icons/content/add';
 import BlockExperience from './BlockExperience';
 import BlockProjects from './BlockProjects';
-import AddIcon from 'material-ui/svg-icons/content/add';
-import { renderTextField } from '../../helpers';
+import renderTextField from '../../helpers';
 
 import './CvForm.less';
 
@@ -38,8 +38,8 @@ const styles = {
   }
 };
 
-export default class CvForm extends React.Component {
-  get initialState() {
+class CvForm extends React.Component {
+  static get initialState() {
     return {
       cv: {
         communication: '',
@@ -61,15 +61,32 @@ export default class CvForm extends React.Component {
   }
   constructor(props) {
     super(props);
+    this.addExperience = this.addExperience.bind(this);
+    this.addProject = this.addProject.bind(this);
+    this.addTool = this.addTool.bind(this);
+    this.changedTool = this.changedTool.bind(this);
+    this.deleteExperienceFn = this.removeSub.bind(this, 'experiences');
+    this.deleteProjectFn = this.removeSub.bind(this, 'projects');
+    this.resetState = this.resetState.bind(this);
+    this.submit = this.submit.bind(this);
+    this.validateTool = this.validateTool.bind(this);
     this.resetState();
   }
   resetState() {
-    const firstState = this.initialState;
+    const firstState = CvForm.initialState;
     if (this.props.location.state &&
         this.props.location.state.cv) {
-      const { createdAt, updatedAt, id, ...data } = this.props.location.state.cv;
+      const {
+        // turning off eslint to extract unnecessary props
+        /* eslint-disable no-unused-vars */
+        createdAt,
+        updatedAt,
+        /* eslint-enable no-unused-vars */
+        id,
+        ...data
+      } = this.props.location.state.cv;
       if (this.props.location.state.snackbar) {
-        Object.assign(firstState, props.location.state.snackbar);
+        Object.assign(firstState, this.props.location.state.snackbar);
       }
       this.cvId = id;
       firstState.cv = data;
@@ -77,17 +94,6 @@ export default class CvForm extends React.Component {
     }
     this.state = firstState;
     this.props.initialize(this.state);
-  }
-  renderChip(data, i) {
-    return (
-      <Chip
-        key={data}
-        className="chip"
-        onRequestDelete={this.removeSub.bind(this, 'tools', i)}
-        style={styles.chip} >
-        {data}
-      </Chip>
-    );
   }
   changedTool(e, value) {
     const err = this.validateTool(value);
@@ -110,20 +116,20 @@ export default class CvForm extends React.Component {
       return;
     }
     const updatedCv = Object.assign({}, this.state.cv);
-    let tools = updatedCv.tools.slice();
+    const tools = updatedCv.tools.slice();
     tools.push(e.target.value);
     updatedCv.tools = tools;
     this.props.change('toolsInput', '');
     this.props.change('cv.tools', tools);
     this.setState({
       cv: updatedCv,
-      snackbar: this.initialState.snackbar,
-      toolsInput: this.initialState.toolsInput
+      snackbar: CvForm.initialState.snackbar,
+      toolsInput: CvForm.initialState.toolsInput
     });
   }
   removeSub(key, index) {
     const updatedCv = Object.assign({}, this.state.cv);
-    let subArray = updatedCv[key].slice();
+    const subArray = updatedCv[key].slice();
     subArray.splice(index, 1);
     updatedCv[key] = subArray;
     this.setState({ cv: updatedCv });
@@ -136,7 +142,7 @@ export default class CvForm extends React.Component {
       since: '',
       till: ''
     };
-    let updatedCv = Object.assign({}, this.state.cv);
+    const updatedCv = Object.assign({}, this.state.cv);
     updatedCv.experiences = updatedCv.experiences.concat([newExperience]);
     this.setState({ cv: updatedCv });
   }
@@ -146,7 +152,7 @@ export default class CvForm extends React.Component {
       role: '',
       title: ''
     };
-    let updatedCv = Object.assign({}, this.state.cv);
+    const updatedCv = Object.assign({}, this.state.cv);
     updatedCv.projects = updatedCv.projects.concat([newProject]);
     this.setState({ cv: updatedCv });
   }
@@ -166,7 +172,7 @@ export default class CvForm extends React.Component {
           });
         }
       })
-      .catch(err => {
+      .catch(() => {
         this.setState({
           snackbar: {
             open: true,
@@ -202,6 +208,19 @@ export default class CvForm extends React.Component {
       });
     }
   }
+  renderChip(data, i) {
+    const removeChipFn = this.removeSub.bind(this, 'tools', i);
+    return (
+      <Chip
+        key={data}
+        className="chip"
+        onRequestDelete={removeChipFn}
+        style={styles.chip}
+      >
+        {data}
+      </Chip>
+    );
+  }
   render() {
     const {
       handleSubmit,
@@ -210,14 +229,19 @@ export default class CvForm extends React.Component {
     } = this.props;
     return (
       <div className="container">
-        <form className="form-horizontal" onSubmit={handleSubmit(this.submit.bind(this))}>
+        <form className="form-horizontal" onSubmit={handleSubmit(this.submit)}>
           <fieldset>
             <div className="form-group">
-              <label className="col-sm-3 control-label" htmlFor="firstname">First Name</label>
+              <label
+                className="col-sm-3 control-label"
+                htmlFor="firstname"
+              >
+                First Name
+              </label>
               <div className="col-sm-9">
                 <Field
                   component={renderTextField}
-                  fullWidth={true}
+                  fullWidth
                   id="firstname"
                   name="cv.firstname"
                   value={this.state.cv.firstname}
@@ -225,11 +249,16 @@ export default class CvForm extends React.Component {
               </div>
             </div>
             <div className="form-group">
-              <label className="col-sm-3 control-label" htmlFor="lastname">Last Name</label>
+              <label
+                className="col-sm-3 control-label"
+                htmlFor="lastname"
+              >
+                Last Name
+              </label>
               <div className="col-sm-9">
                 <Field
                   component={renderTextField}
-                  fullWidth={true}
+                  fullWidth
                   id="lastname"
                   name="cv.lastname"
                   value={this.state.cv.lastname}
@@ -237,11 +266,16 @@ export default class CvForm extends React.Component {
               </div>
             </div>
             <div className="form-group">
-              <label className="col-sm-3 control-label" htmlFor="role">Role</label>
+              <label
+                className="col-sm-3 control-label"
+                htmlFor="role"
+              >
+                Role
+              </label>
               <div className="col-sm-9">
                 <Field
                   component={renderTextField}
-                  fullWidth={true}
+                  fullWidth
                   hintText="Current position"
                   id="role"
                   name="cv.role"
@@ -256,7 +290,7 @@ export default class CvForm extends React.Component {
               <div className="col-sm-9">
                 <Field
                   component={renderTextField}
-                  fullWidth={true}
+                  fullWidth
                   hintText="Languages and proficiency"
                   id="communication"
                   name="cv.communication"
@@ -265,11 +299,16 @@ export default class CvForm extends React.Component {
               </div>
             </div>
             <div className="form-group">
-              <label className="col-sm-3 control-label" htmlFor="education">Education</label>
+              <label
+                className="col-sm-3 control-label"
+                htmlFor="education"
+              >
+                Education
+              </label>
               <div className="col-sm-9">
                 <Field
                   component={renderTextField}
-                  fullWidth={true}
+                  fullWidth
                   id="education"
                   name="cv.education"
                   value={this.state.cv.education}
@@ -284,14 +323,14 @@ export default class CvForm extends React.Component {
                 <Field
                   component={renderTextField}
                   className="hidden-print"
-                  fullWidth={true}
+                  fullWidth
                   hintText='Press "Enter" to add new record'
                   id="tools"
                   name="toolsInput"
                   value={this.state.toolsInput}
-                  onKeyDown={this.addTool.bind(this)}
-                  onChange={this.changedTool.bind(this)}
-                  validate={this.validateTool.bind(this)}
+                  onKeyDown={this.addTool}
+                  onChange={this.changedTool}
+                  validate={this.validateTool}
                 />
                 <Field
                   name="cv.tools"
@@ -305,14 +344,18 @@ export default class CvForm extends React.Component {
               </div>
             </div>
             <div className="form-group">
-              <label className="col-sm-3 control-label" style={styles.block.label}>
+              <label
+                className="col-sm-3 control-label"
+                htmlFor="experiences"
+                style={styles.block.label}
+              >
                 Experience
                 <IconButton
                   tooltip="Add Experience"
                   className="hidden-print"
                   iconStyle={styles.block.iconStyle}
                   style={styles.block.iconButton}
-                  onClick={this.addExperience.bind(this)}
+                  onClick={this.addExperience}
                 >
                   <AddIcon />
                 </IconButton>
@@ -321,18 +364,22 @@ export default class CvForm extends React.Component {
                 class="col-sm-9 block align-right-sm"
                 fieldRenderFn={renderTextField}
                 data={this.state.cv.experiences}
-                deleteFn={this.removeSub.bind(this, 'experiences')}
+                deleteFn={this.deleteExperienceFn}
               />
             </div>
             <div className="form-group">
-              <label className="col-sm-3 control-label" style={styles.block.label}>
+              <label
+                className="col-sm-3 control-label"
+                htmlFor="projects"
+                style={styles.block.label}
+              >
                 Projects
                 <IconButton
                   tooltip="Add Project"
                   className="hidden-print"
                   iconStyle={styles.block.iconStyle}
                   style={styles.block.iconButton}
-                  onClick={this.addProject.bind(this)}
+                  onClick={this.addProject}
                 >
                   <AddIcon />
                 </IconButton>
@@ -341,7 +388,7 @@ export default class CvForm extends React.Component {
                 class="col-sm-9 block align-right-sm"
                 fieldRenderFn={renderTextField}
                 data={this.state.cv.projects}
-                deleteFn={this.removeSub.bind(this, 'projects')}
+                deleteFn={this.deleteProjectFn}
               />
             </div>
             <div className="form-group">
@@ -349,14 +396,13 @@ export default class CvForm extends React.Component {
                 className="hidden-print"
                 disabled={pristine || submitting}
                 label={this.state.submitBtnText}
-                primary={true}
+                primary
                 type="submit"
               />
               <RaisedButton
-                className="hidden-print"
-                className={pristine ? 'hidden' : ''}
+                className={`hidden-print ${pristine ? 'hidden' : ''}`}
                 label="Reset"
-                onClick={this.resetState.bind(this)}
+                onClick={this.resetState}
                 style={{ marginLeft: 20 }}
               />
             </div>
@@ -371,3 +417,19 @@ export default class CvForm extends React.Component {
     );
   }
 }
+
+CvForm.propTypes = {
+  change: React.PropTypes.func.isRequired,
+  createCv: React.PropTypes.func.isRequired,
+  form: React.PropTypes.string.isRequired,
+  handleSubmit: React.PropTypes.func.isRequired,
+  initialize: React.PropTypes.func.isRequired,
+  location: React.PropTypes.object.isRequired,
+  notSubmit: React.PropTypes.func.isRequired,
+  pristine: React.PropTypes.bool.isRequired,
+  router: React.PropTypes.object.isRequired,
+  submitting: React.PropTypes.bool.isRequired,
+  updateCv: React.PropTypes.func.isRequired
+};
+
+export default CvForm;

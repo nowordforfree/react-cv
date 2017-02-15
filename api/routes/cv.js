@@ -1,13 +1,13 @@
 const express = require('express');
-const db      = require('../models');
-const router  = express.Router();
+const db = require('../models');
+
+const router = express.Router();
 
 function getMissingIds(source, target) {
   const existing = target.filter(obj => obj.id && obj.CvId);
+  // eslint-disable-next-line consistent-return, array-callback-return
   const result = source.map((a) => {
-    if (existing.some(b => a.id === b.id)) {
-      return;
-    } else {
+    if (!existing.some(b => a.id === b.id)) {
       return a.id;
     }
   }).filter(obj => obj);
@@ -31,7 +31,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', (req, res, next) => {
   if (!req.params.id) {
     return res.status(400).json({
       error: 'Cv ID is required'
@@ -45,27 +45,21 @@ router.get('/:id', (req, res) => {
         { model: db.Experience, as: 'experiences' }
       ]
     })
-    .then((cv) => {
-      res.json({ data: cv });
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).json({ error: err });
-    });
+    .then(cv => res.json({ data: cv }))
+    .catch(err => res.status(500).json({ error: err }));
+  return next();
 });
 
 router.post('/', (req, res) => {
   db
     .sequelize
-    .transaction((t) => {
-      return db.Cv.create(req.body, {
-        include: [
+    .transaction(t => db.Cv.create(req.body, {
+      include: [
           { model: db.Project, as: 'projects' },
           { model: db.Experience, as: 'experiences' }
-        ],
-        transaction: t
-      });
-    })
+      ],
+      transaction: t
+    }))
     .then((cv) => {
       res.json({ data: cv });
     })
@@ -74,7 +68,7 @@ router.post('/', (req, res) => {
     });
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', (req, res, next) => {
   db
     .Cv
     .findById(req.params.id, {
@@ -114,15 +108,14 @@ router.put('/:id', (req, res) => {
                 where: { id: projectsToDelete },
                 transaction: t
               });
-            } else {
-              return Promise.resolve();
             }
+            return Promise.resolve();
           })
           .then(() => {
-            let projectsToAdd = [];
+            const projectsToAdd = [];
             if (req.body.projects &&
                 req.body.projects.length) {
-              req.body.projects.forEach(project => {
+              req.body.projects.forEach((project) => {
                 if (!project.CvId) {
                   Object.assign(project, { CvId: cv.get('id') });
                 }
@@ -134,29 +127,30 @@ router.put('/:id', (req, res) => {
             return Promise.all(projectsToAdd);
           })
           .then(() => {
-            let experiencesToAdd = [];
+            const experiencesToAdd = [];
             if (req.body.experiences &&
                 req.body.experiences.length) {
-              req.body.experiences.forEach(experience => {
+              req.body.experiences.forEach((experience) => {
                 if (!experience.CvId) {
                   Object.assign(experience, { CvId: cv.get('id') });
                 }
                 experiencesToAdd.push(db.Experience.upsert(experience, {
                   transaction: t
                 }));
-              })
+              });
             }
             return Promise.all(experiencesToAdd);
           })
           .then(() => cv.update(req.body, { transaction: t }))
-          .then(cv => cv)
+          .then(updatedCv => updatedCv);
         })
-        .then(cv => res.json({ data: cv }))
+        .then(updatedCv => res.json({ data: updatedCv }))
         .catch(err => res.status(500).json({ error: err }));
-    })
+      return next();
+    });
 });
 
-router.delete('/:id?', (req, res) => {
+router.delete('/:id?', (req, res, next) => {
   if (!req.params.id && !req.body.length) {
     return res.status(400).json({ error: 'CV id(s) are required for DELETE' });
   }
@@ -167,12 +161,13 @@ router.delete('/:id?', (req, res) => {
         id: (req.params.id || req.body)
       }
     })
-    .then(arg => {
+    .then((arg) => {
       res.json({ data: arg });
     })
-    .catch(err => {
+    .catch((err) => {
       res.json({ error: err });
     });
+  return next();
 });
 
 module.exports = router;

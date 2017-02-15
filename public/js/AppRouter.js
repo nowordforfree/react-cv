@@ -17,16 +17,22 @@ function isLoggedIn(nextState, replace, callback) {
   callback();
 }
 
-const routes =
-  <Route path='/' component={Root}>
+const routes = (
+  <Route path="/" component={Root}>
     <IndexRoute component={Home} onEnter={isLoggedIn} />
-    <Route path='login' component={Auth}/>
-    <Route path='profile' component={Profile} onEnter={isLoggedIn} />
-    <Route path='cv' component={CvForm} onEnter={isLoggedIn} />
-    <Route path='cv/:cvId' component={CvForm} onEnter={isLoggedIn} />
-    <Route path='*' component={Error404}/>
-  </Route>;
+    <Route path="login" component={Auth} />
+    <Route path="profile" component={Profile} onEnter={isLoggedIn} />
+    <Route path="cv" component={CvForm} onEnter={isLoggedIn} />
+    <Route path="cv/:cvId" component={CvForm} onEnter={isLoggedIn} />
+    <Route path="*" component={Error404} />
+  </Route>
+);
 
-export default (props) => {
-  return <Router history={props.history} routes={routes} />;
+const RouterComponent = props =>
+  <Router history={props.history} routes={routes} />;
+
+RouterComponent.propTypes = {
+  history: React.PropTypes.object.isRequired
 };
+
+export default RouterComponent;

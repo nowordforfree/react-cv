@@ -1,9 +1,9 @@
 const express = require('express');
-const jwt     = require('jsonwebtoken');
-const db      = require('../models');
+const jwt = require('jsonwebtoken');
+const db = require('../models');
 
-const router  = express.Router();
-
+const router = express.Router();
+// eslint-disable-next-line consistent-return
 router.post('/login', (req, res, next) => {
   if (!req.body.email) {
     res.status(400).json({
@@ -24,6 +24,7 @@ router.post('/login', (req, res, next) => {
         email: req.body.email
       }
     })
+    // eslint-disable-next-line consistent-return
     .then((user) => {
       if (!user) {
         res.status(400).json({
@@ -44,8 +45,8 @@ router.post('/login', (req, res, next) => {
           } else {
             res.json({
               data: {
-                token: token,
-                user: user
+                token,
+                user
               }
             });
           }
@@ -61,8 +62,7 @@ router.post('/login', (req, res, next) => {
     });
 });
 
-router.post('/logout', (req, res, next) => {
-  req.session = null;
+router.post('/logout', (req, res) => {
   res.json({ data: 'Bye' });
 });
 

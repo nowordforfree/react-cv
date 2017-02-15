@@ -2,7 +2,7 @@ import React from 'react';
 import { Field } from 'redux-form';
 import RaisedButton from 'material-ui/RaisedButton';
 
-export default (props) => (
+const BlockProjects = props => (
   <div className={props.class}>
     {props.data.map((obj, i) => (
       <div key={i}>
@@ -10,7 +10,7 @@ export default (props) => (
           <div className="col-sm-6">
             <Field
               component={props.fieldRenderFn}
-              fullWidth={true}
+              fullWidth
               hintText="Project Title"
               name={`cv.projects[${i}].title`}
               value={obj.title}
@@ -19,7 +19,7 @@ export default (props) => (
           <div className="col-sm-6">
             <Field
               component={props.fieldRenderFn}
-              fullWidth={true}
+              fullWidth
               hintText="Role in project (position)"
               name={`cv.projects[${i}].role`}
               value={obj.role}
@@ -30,9 +30,9 @@ export default (props) => (
           <div className="col-sm-12">
             <Field
               component={props.fieldRenderFn}
-              fullWidth={true}
+              fullWidth
               hintText="Description"
-              multiLine={true}
+              multiLine
               name={`cv.projects[${i}].description`}
               rows={2}
               rowsMax={4}
@@ -53,3 +53,11 @@ export default (props) => (
     ))}
   </div>
 );
+
+BlockProjects.propTypes = {
+  class: React.PropTypes.string.isRequired,
+  data: React.PropTypes.array.isRequired,
+  fieldRenderFn: React.PropTypes.func.isRequired
+};
+
+export default BlockProjects;

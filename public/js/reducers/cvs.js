@@ -34,7 +34,7 @@ const cvs = (state = initialState, action) => {
       return {
         ...state,
         isFetching: false,
-        items: [ ...state.items, action.data ]
+        items: [...state.items, action.data]
       };
     case ACTION_TYPES.CV_DELETE_SUCCESS:
       return {
@@ -46,12 +46,11 @@ const cvs = (state = initialState, action) => {
       return {
         ...state,
         isFetching: false,
-        items: state.items.map(obj => {
+        items: state.items.map((obj) => {
           if (obj.id === action.data.id) {
             return action.data;
-          } else {
-            return obj;
           }
+          return obj;
         })
       };
     case ACTION_TYPES.CV_FETCH_SUCCESS:
@@ -73,10 +72,10 @@ const cvs = (state = initialState, action) => {
       return {
         ...state,
         isFetching: false
-      }
+      };
     default:
       return state;
   }
-}
+};
 
 export default cvs;

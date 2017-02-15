@@ -4,6 +4,6 @@ import './Spinner.less';
 
 export default () => (
   <div className="spin-backdrop">
-    <img className="spinner" src="/img/logo.svg"/>
+    <img className="spinner" alt="" src="/img/logo.svg" />
   </div>
 );

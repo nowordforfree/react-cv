@@ -1,6 +1,7 @@
 const express = require('express');
-const db      = require('../models');
-const router  = express.Router();
+const db = require('../models');
+
+const router = express.Router();
 
 function validateEmail(email) {
   const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
@@ -18,7 +19,7 @@ router.get('/', (req, res) => {
       res.status(500).json({ error: err });
     });
 });
-
+// eslint-disable-next-line consistent-return
 router.get('/:id', (req, res) => {
   if (!req.params.id) {
     return res.status(400).json({
@@ -35,7 +36,7 @@ router.get('/:id', (req, res) => {
       res.status(500).json({ error: err });
     });
 });
-
+// eslint-disable-next-line consistent-return
 router.post('/', (req, res, next) => {
   if (req.body.email) {
     if (!validateEmail(req.body.email)) {
@@ -69,13 +70,13 @@ router.post('/', (req, res, next) => {
     .then((user) => {
       res.json({ data: user });
     })
-    .catch(db.Sequelize.ValidationError, err => {
+    .catch(db.Sequelize.ValidationError, (err) => {
       res
         .status(400)
         .json({
-          error: err.errors.reduce((res, obj) => {
-            res += obj.message + '\n';
-            return res;
+          error: err.errors.reduce((text, obj) => {
+            const result = `text${obj.message}\n`;
+            return result;
           }, '')
         });
     })
@@ -83,7 +84,7 @@ router.post('/', (req, res, next) => {
       res.status(500).json({ error: err });
     });
 });
-
+// eslint-disable-next-line consistent-return
 router.put('/:id', (req, res) => {
   if (!req.params.id) {
     return res.status(400).json({
@@ -93,6 +94,7 @@ router.put('/:id', (req, res) => {
   db
     .User
     .findById(req.params.id)
+    // eslint-disable-next-line consistent-return
     .then((user) => {
       if (!user) {
         return res.status(400).json({
@@ -101,13 +103,13 @@ router.put('/:id', (req, res) => {
       }
       user
         .update(req.body)
-        .then(updatedUser => {
+        .then((updatedUser) => {
           res.json({ data: updatedUser });
         })
         .catch((err) => {
           res.json({ error: err });
         });
-    })
+    });
 });
 
 router.delete('/:id', (req, res) => {

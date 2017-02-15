@@ -2,18 +2,19 @@ import React from 'react';
 import { Field } from 'redux-form';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
-import { renderTextField } from '../../helpers';
+import renderTextField from '../../helpers';
 
-export default class Profile extends React.Component {
+class Profile extends React.Component {
   constructor(props) {
     super(props);
+    this.submit = this.submit.bind(this);
     this.state = {
       open: false,
       message: ''
     };
   }
   submit(values) {
-    let { userId, ...data } = values;
+    const { userId, ...data } = values;
     this
       .props
       .update(userId, data)
@@ -36,11 +37,11 @@ export default class Profile extends React.Component {
       <div className="container">
         <div className="row">
           <div className="col-md-6 col-md-offset-3">
-            <form className="form" onSubmit={handleSubmit(this.submit.bind(this))}>
+            <form className="form" onSubmit={handleSubmit(this.submit)}>
               <div className="form-group">
                 <Field
                   component={renderTextField}
-                  fullWidth={true}
+                  fullWidth
                   label="Username"
                   name="username"
                 />
@@ -48,7 +49,7 @@ export default class Profile extends React.Component {
               <div className="form-group">
                 <Field
                   component={renderTextField}
-                  fullWidth={true}
+                  fullWidth
                   label="First Name"
                   name="firstname"
                 />
@@ -56,7 +57,7 @@ export default class Profile extends React.Component {
               <div className="form-group">
                 <Field
                   component={renderTextField}
-                  fullWidth={true}
+                  fullWidth
                   label="Last Name"
                   name="lastname"
                 />
@@ -64,7 +65,7 @@ export default class Profile extends React.Component {
               <div className="form-group">
                 <Field
                   component={renderTextField}
-                  fullWidth={true}
+                  fullWidth
                   label="Email"
                   name="email"
                   type="email"
@@ -74,7 +75,7 @@ export default class Profile extends React.Component {
                 <RaisedButton
                   disabled={pristine || submitting}
                   label="Update"
-                  primary={true}
+                  primary
                   type="submit"
                 />
               </div>
@@ -89,4 +90,13 @@ export default class Profile extends React.Component {
       </div>
     );
   }
+}
+
+Profile.propTypes = {
+  handleSubmit: React.PropTypes.func.isRequired,
+  pristine: React.PropTypes.bool.isRequired,
+  submitting: React.PropTypes.bool.isRequired,
+  update: React.PropTypes.func.isRequired
 };
+
+export default Profile;

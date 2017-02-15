@@ -8,7 +8,7 @@ import store from './store';
 export default () => (
   <Provider store={store}>
     <MuiThemeProvider>
-      <AppRouter history={browserHistory}/>
+      <AppRouter history={browserHistory} />
     </MuiThemeProvider>
   </Provider>
 );

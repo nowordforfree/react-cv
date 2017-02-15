@@ -28,7 +28,7 @@ function setupCompiler(host, port, protocol) {
 }
 
 function runDevServer(host, port, protocol) {
-  var devServer = new WebpackDevServer(compiler, {
+  const devServer = new WebpackDevServer(compiler, {
     // Enable gzip compression of generated files.
     compress: true,
     contentBase: ['./public'],
@@ -48,7 +48,7 @@ function runDevServer(host, port, protocol) {
       ignored: /node_modules/
     },
     // Enable HTTPS if the HTTPS environment variable is set to 'true'
-    https: protocol === "https",
+    https: protocol === 'https',
     host: host,
     quiet: false,
     // It suppress everything except error, so it has to be set to false as well
@@ -67,19 +67,18 @@ function runDevServer(host, port, protocol) {
   });
 
   // Launch WebpackDevServer.
-  devServer.listen(port, (err, result) => {
+  devServer.listen(port, (err) => {
     if (err) {
       return console.log(err);
     }
-
     console.log('Starting the development server...');
   });
 }
 
 function run(port) {
-  var protocol = (process.env.HTTPS === 'true' ||
+  const protocol = (process.env.HTTPS === 'true' ||
                   config.app.https === true) ? 'https' : 'http';
-  var host = process.env.HOST || config.app.host || 'localhost';
+  const host = process.env.HOST || config.app.host || 'localhost';
   runApi();
   setupCompiler(host, port, protocol);
   runDevServer(host, port, protocol);

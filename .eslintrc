@@ -1,0 +1,24 @@
+{
+  "extends": "airbnb",
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  },
+  "globals": {
+    "API_URL": true,
+    "fetch": true
+  },
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "comma-dangle": 0,
+    "indent": [ "error", 2, { "SwitchCase": 1 } ],
+    "max-len": [ "error", 80, 2 ],
+    "no-console": 1,
+    "react/forbid-prop-types": [ "error", { "forbid": [ "any" ] } ],
+    "react/jsx-filename-extension": [ 1, { "extensions": [ ".js", ".jsx" ] } ],
+    "react/no-array-index-key": 0
+  }
+}

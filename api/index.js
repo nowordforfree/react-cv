@@ -1,15 +1,15 @@
-const express     = require('express');
-const routes      = require('./routes');
-const helmet      = require('helmet');
-const bodyParser  = require('body-parser');
-const cookieParser= require('cookie-parser');
-const multer      = require('multer');
-const config      = require('../config');
+const express = require('express');
+const routes = require('./routes');
+const helmet = require('helmet');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const multer = require('multer');
+const config = require('../config');
 
 const upload = multer();
 
 const HOST = config.api.host || 'localhost';
-const PORT = config.api.port || '8070'; 
+const PORT = config.api.port || '8070';
 
 module.exports = () => {
   const app = express();
@@ -25,11 +25,12 @@ module.exports = () => {
   // Use cookie-parser
   app.use(cookieParser());
   // enable CORS
-  app.use(function(req, res, next) {
+  app.use((req, res, next) => {
     res.set({
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
-      'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+      'Access-Control-Allow-Headers':
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
     });
     next();
   });
@@ -45,4 +46,4 @@ module.exports = () => {
   app.listen(config.api.port, config.api.hostname, () => {
     console.log(`API server is running on http://${HOST}:${PORT}`);
   });
-}
+};

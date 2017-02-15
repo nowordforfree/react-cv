@@ -5,7 +5,7 @@ import createLogger from 'redux-logger';
 import reducer from '../reducers';
 
 const getPreloadedAuthState = () => {
-  let token = localStorage.getItem('token');
+  const token = localStorage.getItem('token');
   let user = localStorage.getItem('user');
   if (user) {
     try {
@@ -17,10 +17,10 @@ const getPreloadedAuthState = () => {
   return {
     auth: {
       signedIn: !!(token && user),
-      user: user
+      user
     }
   };
-}
+};
 
 const middlewares = [thunk];
 

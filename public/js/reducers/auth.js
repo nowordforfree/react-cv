@@ -47,7 +47,7 @@ const auth = (state = initialState, action) => {
         signedIn: false,
         isFetching: false,
         error: action.error
-      }
+      };
     default:
       return state;
   }
