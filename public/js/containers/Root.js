@@ -1,6 +1,6 @@
 import React from 'react';
-import Topbar from '../Topbar';
-import Spinner from '../Spinner';
+import Topbar from './Topbar';
+import Spinner from '../components/Spinner';
 import { connect } from 'react-redux';
 import Paper from 'material-ui/Paper';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { IndexRoute, Route, Router } from 'react-router';
 
 import Error404 from './components/Error404';
-import Root from './components/Root';
+import Root from './containers/Root';
 import Home from './containers/VisibleCvList';
 import Auth from './components/Auth';
 import Profile from './containers/ProfileForm';
