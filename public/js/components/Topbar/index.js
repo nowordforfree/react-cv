@@ -11,6 +11,8 @@ import SvgMenu from 'material-ui/svg-icons/navigation/menu';
 import SvgSubject from 'material-ui/svg-icons/action/subject';
 import SvgProfile from 'material-ui/svg-icons/action/account-circle';
 import SvgLogout from 'material-ui/svg-icons/action/exit-to-app';
+import SvgBack from 'material-ui/svg-icons/navigation/chevron-left';
+import SvgNext from 'material-ui/svg-icons/navigation/chevron-right';
 
 const Login = () => (
   <FlatButton
@@ -30,8 +32,8 @@ const Logged = (props) => {
           <SvgMenu />
         </IconButton>
       }
-      targetOrigin={{horizontal: 'right', vertical: 'top'}}
-      anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+      targetOrigin={{horizontal: 'left', vertical: 'top'}}
+      anchorOrigin={{horizontal: 'left', vertical: 'top'}}
       touchTapCloseDelay={5}
     >
       <MenuItem
@@ -62,14 +64,33 @@ const Logged = (props) => {
   );
 }
 
-const Topbar = ({ signedIn, logout }) => (
+const Navigation = ({ router }) => (
+  <div>
+    <FlatButton
+      label="Back"
+      icon={<SvgBack />}
+      style={{ color: '#fff' }}
+      onTouchTap={ router.goBack } />
+    <FlatButton
+      label="Forward"
+      labelPosition="before"
+      icon={<SvgNext />}
+      style={{ color: '#fff' }}
+      onTouchTap={ router.goForward } />
+  </div>
+)
+
+const Topbar = ({ signedIn, logout, router }) => (
   <AppBar
     title="CVs"
     className="hidden-print"
-    iconElementRight={
-      signedIn ? <Logged logout={logout} /> : <Login />
+    iconElementLeft={
+      signedIn ? <Logged logout={logout} /> : null
     }
-    showMenuIconButton={false}
+    iconElementRight={
+      signedIn ? <Navigation router={router} /> : <Login />
+    }
+    showMenuIconButton={signedIn}
     style={{
       position: 'fixed',
       left: 0,

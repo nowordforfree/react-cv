@@ -23,7 +23,7 @@ class Root extends React.Component {
     return (
       <div>
         { this.props.showSpinner ? <Spinner/> : null }
-        <Topbar />
+        <Topbar router={this.props.router} />
         <Paper style={style} zDepth={1}>
           { this.props.children }
         </Paper>
