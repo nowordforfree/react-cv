@@ -5,9 +5,7 @@ const config = require('./config');
 
 module.exports = {
   entry: [
-    'react-hot-loader/patch',
-    `webpack-dev-server/client?http://${config.app.host}:${config.app.port}`,
-    './public/js/index.js'
+    path.join(__dirname, 'public/js', 'index.js')
   ],
   output: {
     path: path.join(__dirname, 'public'),
@@ -34,7 +32,6 @@ module.exports = {
     }]
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
     new WebpackNotifierPlugin(),
     new webpack.ProvidePlugin({
