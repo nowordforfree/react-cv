@@ -16,4 +16,6 @@ In order to run this application you should perform following steps:
         2. Run shell script from root of this project (`./docker-run-postgres.sh`)
 4. Run this app by executing `npm start`
 
-If you want just to build source code - run `npm run build`.
+If you want just build source code: run `npm run build`.
+
+If you want to run [eslint](http://eslint.org/): run `npm run lint`.
