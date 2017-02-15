@@ -11,11 +11,11 @@ module.exports = {
     }
   },
   api: {
-    host: 'ozzy',
+    host: 'localhost',
     port: 8090
   },
   app: {
-    host: 'ozzy',
+    host: 'localhost',
     https: false,
     port: 8080
   }
