@@ -133,7 +133,7 @@ class CvForm extends React.Component {
     subArray.splice(index, 1);
     updatedCv[key] = subArray;
     this.setState({ cv: updatedCv });
-    this.props.change(`cv.${key}`, subArray);
+    this.props.array.remove(`cv.${key}`, index);
   }
   addExperience() {
     const newExperience = {
@@ -419,6 +419,7 @@ class CvForm extends React.Component {
 }
 
 CvForm.propTypes = {
+  array: React.PropTypes.object.isRequired,
   change: React.PropTypes.func.isRequired,
   createCv: React.PropTypes.func.isRequired,
   form: React.PropTypes.string.isRequired,
