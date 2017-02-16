@@ -229,9 +229,25 @@ class CvForm extends React.Component {
     } = this.props;
     return (
       <div className="container">
+        <div className="visible-print-block">
+          <div className="cv-head">
+            <img
+              alt=""
+              className="chevron top"
+              src="/img/chevron_top.svg"
+            />
+            <h1>{this.state.cv.firstname}</h1>
+            <h1>{this.state.cv.lastname}</h1>
+            <img
+              alt=""
+              className="chevron bottom"
+              src="/img/chevron_bottom.svg"
+            />
+          </div>
+        </div>
         <form className="form-horizontal" onSubmit={handleSubmit(this.submit)}>
           <fieldset>
-            <div className="form-group">
+            <div className="form-group hidden-print">
               <label
                 className="col-sm-3 control-label"
                 htmlFor="firstname"
@@ -248,7 +264,7 @@ class CvForm extends React.Component {
                 />
               </div>
             </div>
-            <div className="form-group">
+            <div className="form-group hidden-print">
               <label
                 className="col-sm-3 control-label"
                 htmlFor="lastname"
@@ -408,6 +424,15 @@ class CvForm extends React.Component {
             </div>
           </fieldset>
         </form>
+        <footer className="visible-print-block">
+          <a
+            href="https://nixsolutions.com"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <img alt="" src="/img/logo.png" />
+          </a>
+        </footer>
         <Snackbar
           open={this.state.snackbar.open}
           message={this.state.snackbar.message}
