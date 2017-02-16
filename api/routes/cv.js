@@ -68,7 +68,7 @@ router.post('/', (req, res) => {
     });
 });
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', (req, res) => {
   db
     .Cv
     .findById(req.params.id, {
@@ -77,6 +77,7 @@ router.put('/:id', (req, res, next) => {
         { model: db.Experience, as: 'experiences' }
       ]
     })
+    // eslint-disable-next-line consistent-return
     .then((cv) => {
       if (!cv) {
         return res.status(400).json({
@@ -146,11 +147,10 @@ router.put('/:id', (req, res, next) => {
         })
         .then(updatedCv => res.json({ data: updatedCv }))
         .catch(err => res.status(500).json({ error: err }));
-      return next();
     });
 });
-
-router.delete('/:id?', (req, res, next) => {
+// eslint-disable-next-line consistent-return
+router.delete('/:id?', (req, res) => {
   if (!req.params.id && !req.body.length) {
     return res.status(400).json({ error: 'CV id(s) are required for DELETE' });
   }
@@ -167,7 +167,6 @@ router.delete('/:id?', (req, res, next) => {
     .catch((err) => {
       res.json({ error: err });
     });
-  return next();
 });
 
 module.exports = router;
