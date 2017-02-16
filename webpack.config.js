@@ -12,20 +12,21 @@ module.exports = {
     publicPath: '/public',
     filename: 'js/bundle.js'
   },
+  devtool: '#source-map',
   module: {
     loaders: [{
       test: /\.less$/,
-      loader: 'style!css!less'
+      loader: 'style-loader!css-loader!less-loader'
     }, {
       test: /\.css$/,
-      loader: 'style!css'
+      loader: 'style-loader!css-loader'
     }, {
       test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
-      loader: 'file?name=/fonts/[name].[ext]'
+      loader: 'file-loader?name=/fonts/[name].[ext]'
     }, {
       test: /\.js$/,
+      loader: 'babel-loader',
       exclude: /node_modules/,
-      loader: 'babel',
       query: {
         presets: ['react', 'es2015']
       }
@@ -43,7 +44,9 @@ module.exports = {
         'NODE_ENV': (process.env && JSON.stringify(process.env.NODE_ENV)) || JSON.stringify('development')
       }
     }),
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.OccurrenceOrderPlugin()
+    new webpack.LoaderOptionsPlugin({
+      minimize: true,
+      debug: false
+    })
   ]
 };
