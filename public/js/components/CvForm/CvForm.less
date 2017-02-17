@@ -19,17 +19,52 @@
     }
   }
 }
+@media only screen and (min-width: 768px) and (max-width: 790px) {
+  .form-horizontal {
+    .form-group {
+      margin-right: 0;
+    }
+  }
+}
+
 @media print {
-  label {
-    color: #00b8e6 !important;
-    font-size: 20px;
-    text-transform: uppercase;
-  }
-  .chip svg {
-    display: none !important;
-  }
   a[href]:after {
     content: none !important;
+  }
+  hr {
+    display: none;
+  }
+  .form-horizontal {
+    .form-group {
+      border-bottom: 1px solid rgb(224, 224, 224);
+      margin-bottom: 0;
+      text-align: right;
+      &:nth-child(3) {
+        border-top: 1px solid rgb(224, 224, 224);
+      }
+      & > div[class*="col-"] {
+        text-align: left;
+        & div[style] {
+          width: initial;
+        }
+        & label {
+          line-height: 48px;
+          text-align: left;
+        }
+      }
+      & > label {
+        color: #00b8e6 !important;
+        font-size: 20px;
+        padding-top: 12px !important;
+        text-transform: uppercase;
+      }
+      input, textarea {
+        text-align: left;
+      }
+      .chip svg {
+        display: none !important;
+      }
+    }
   }
 }
 
@@ -56,4 +91,5 @@
 footer {
   text-align: center;
   height: 155px;
+  margin-top: 25px;
 }

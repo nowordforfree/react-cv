@@ -35,6 +35,8 @@ const styles = {
   wrapper: {
     display: 'flex',
     flexWrap: 'wrap',
+    minHeight: 48,
+    paddingTop: 5
   }
 };
 
@@ -249,12 +251,12 @@ class CvForm extends React.Component {
           <fieldset>
             <div className="form-group hidden-print">
               <label
-                className="col-sm-3 control-label"
+                className="col-xs-3 col-sm-3 control-label"
                 htmlFor="firstname"
               >
                 First Name
               </label>
-              <div className="col-sm-9">
+              <div className="col-xs-9 col-sm-9">
                 <Field
                   component={renderTextField}
                   fullWidth
@@ -266,12 +268,12 @@ class CvForm extends React.Component {
             </div>
             <div className="form-group hidden-print">
               <label
-                className="col-sm-3 control-label"
+                className="col-xs-3 col-sm-3 control-label"
                 htmlFor="lastname"
               >
                 Last Name
               </label>
-              <div className="col-sm-9">
+              <div className="col-xs-9 col-sm-9">
                 <Field
                   component={renderTextField}
                   fullWidth
@@ -283,12 +285,12 @@ class CvForm extends React.Component {
             </div>
             <div className="form-group">
               <label
-                className="col-sm-3 control-label"
+                className="col-xs-3 col-sm-3 control-label"
                 htmlFor="role"
               >
                 Role
               </label>
-              <div className="col-sm-9">
+              <div className="col-xs-9 col-sm-9">
                 <Field
                   component={renderTextField}
                   fullWidth
@@ -300,10 +302,13 @@ class CvForm extends React.Component {
               </div>
             </div>
             <div className="form-group">
-              <label className="col-sm-3 control-label" htmlFor="communication">
+              <label
+                className="col-xs-3 col-sm-3 control-label"
+                htmlFor="communication"
+              >
                 Communication Skills
               </label>
-              <div className="col-sm-9">
+              <div className="col-xs-9 col-sm-9">
                 <Field
                   component={renderTextField}
                   fullWidth
@@ -316,12 +321,12 @@ class CvForm extends React.Component {
             </div>
             <div className="form-group">
               <label
-                className="col-sm-3 control-label"
+                className="col-xs-3 col-sm-3 control-label"
                 htmlFor="education"
               >
                 Education
               </label>
-              <div className="col-sm-9">
+              <div className="col-xs-9 col-sm-9">
                 <Field
                   component={renderTextField}
                   fullWidth
@@ -332,10 +337,13 @@ class CvForm extends React.Component {
               </div>
             </div>
             <div className="form-group">
-              <label className="col-sm-3 control-label" htmlFor="tools">
+              <label
+                className="col-xs-3 col-sm-3 control-label"
+                htmlFor="tools"
+              >
                 Tools / Frameworks
               </label>
-              <div className="col-sm-9">
+              <div className="col-xs-9 col-sm-9">
                 <Field
                   component={renderTextField}
                   className="hidden-print"
@@ -361,7 +369,7 @@ class CvForm extends React.Component {
             </div>
             <div className="form-group">
               <label
-                className="col-sm-3 control-label"
+                className="col-xs-3 col-sm-3 control-label"
                 htmlFor="experiences"
                 style={styles.block.label}
               >
@@ -377,7 +385,7 @@ class CvForm extends React.Component {
                 </IconButton>
               </label>
               <BlockExperience
-                class="col-sm-9 block align-right-sm"
+                class="col-xs-9 col-sm-9 block align-right-sm"
                 fieldRenderFn={renderTextField}
                 data={this.state.cv.experiences}
                 deleteFn={this.deleteExperienceFn}
@@ -385,7 +393,7 @@ class CvForm extends React.Component {
             </div>
             <div className="form-group">
               <label
-                className="col-sm-3 control-label"
+                className="col-xs-3 col-sm-3 control-label"
                 htmlFor="projects"
                 style={styles.block.label}
               >
@@ -401,22 +409,21 @@ class CvForm extends React.Component {
                 </IconButton>
               </label>
               <BlockProjects
-                class="col-sm-9 block align-right-sm"
+                class="col-xs-9 col-sm-9 block align-right-sm"
                 fieldRenderFn={renderTextField}
                 data={this.state.cv.projects}
                 deleteFn={this.deleteProjectFn}
               />
             </div>
-            <div className="form-group">
+            <div className="form-group hidden-print">
               <RaisedButton
-                className="hidden-print"
                 disabled={pristine || submitting}
                 label={this.state.submitBtnText}
                 primary
                 type="submit"
               />
               <RaisedButton
-                className={`hidden-print ${pristine ? 'hidden' : ''}`}
+                className={pristine ? 'hidden' : ''}
                 label="Reset"
                 onClick={this.resetState}
                 style={{ marginLeft: 20 }}

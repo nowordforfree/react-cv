@@ -9,7 +9,7 @@ const BlockExperience = props => (
     {props.data.map((obj, i) => (
       <div key={i}>
         <div className="row">
-          <div className="col-sm-6">
+          <div className="col-xs-3 col-sm-6">
             <Field
               component={props.fieldRenderFn}
               fullWidth
@@ -21,7 +21,7 @@ const BlockExperience = props => (
               value={obj.since}
             />
           </div>
-          <div className="col-sm-6">
+          <div className="col-xs-3 col-sm-6">
             <Field
               component={props.fieldRenderFn}
               fullWidth
@@ -35,7 +35,7 @@ const BlockExperience = props => (
           </div>
         </div>
         <div className="row">
-          <div className="col-sm-6">
+          <div className="col-xs-6 col-sm-6">
             <Field
               component={props.fieldRenderFn}
               fullWidth
@@ -44,7 +44,7 @@ const BlockExperience = props => (
               value={obj.company}
             />
           </div>
-          <div className="col-sm-6">
+          <div className="col-xs-6 col-sm-6">
             <Field
               component={props.fieldRenderFn}
               fullWidth

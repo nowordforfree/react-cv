@@ -7,7 +7,13 @@ const BlockProjects = props => (
     {props.data.map((obj, i) => (
       <div key={i}>
         <div className="row">
-          <div className="col-sm-6">
+          <label
+            className="control-label col-xs-3 col-sm-6 visible-print-inline"
+            htmlFor={`cv.projects[${i}].title`}
+          >
+            Title:
+          </label>
+          <div className="col-xs-9 col-sm-6">
             <Field
               component={props.fieldRenderFn}
               fullWidth
@@ -16,7 +22,13 @@ const BlockProjects = props => (
               value={obj.title}
             />
           </div>
-          <div className="col-sm-6">
+          <label
+            className="control-label col-xs-3 col-sm-6 visible-print-inline"
+            htmlFor={`cv.projects[${i}].role`}
+          >
+            Role in project:
+          </label>
+          <div className="col-xs-9 col-sm-6">
             <Field
               component={props.fieldRenderFn}
               fullWidth
@@ -27,7 +39,13 @@ const BlockProjects = props => (
           </div>
         </div>
         <div className="row">
-          <div className="col-sm-12">
+          <label
+            className="control-label col-xs-3 col-sm-6 visible-print-inline"
+            htmlFor={`cv.projects[${i}].description`}
+          >
+            Description:
+          </label>
+          <div className="col-xs-9 col-sm-12">
             <Field
               component={props.fieldRenderFn}
               fullWidth
