@@ -4,9 +4,25 @@ body {
   font-family: Roboto;
   margin: 0;
   padding-top: 70px;
+  .paper {
+    min-height: 200px;
+    margin: 20px;
+    padding-top: 15px;
+    padding-bottom: 40px;
+    text-align: center;
+  }
 }
 
 @media print {
+  body {
+    margin: 0;
+    padding: 0;
+    .paper {
+      margin: 0;
+      padding: 0;
+      text-align: initial;
+    }
+  }
   ::-webkit-input-placeholder { /* WebKit browsers */
     color: transparent;
   }

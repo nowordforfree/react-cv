@@ -13,18 +13,11 @@ class Root extends React.Component {
     }
   }
   render() {
-    const style = {
-      minHeight: 200,
-      margin: 20,
-      paddingTop: 15,
-      paddingBottom: 40,
-      textAlign: 'center'
-    };
     return (
       <div>
         { this.props.showSpinner ? <Spinner /> : null }
         <Topbar router={this.props.router} />
-        <Paper style={style} zDepth={1}>
+        <Paper className="paper" zDepth={1}>
           { this.props.children }
         </Paper>
       </div>
